@@ -23,8 +23,8 @@ jobs:
       with:
         gradle-version: 8.2
     
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    - name: Make gradlew executable
+      run: chmod +x gradlew || true
     
     - name: Build with Gradle
       run: gradle assembleDebug --stacktrace
@@ -35,12 +35,3 @@ jobs:
         name: nfc-manager-apk
         path: app/build/outputs/apk/debug/*.apk
         if-no-files-found: warn
-    
-    - name: Build Report
-      if: failure()
-      run: |
-        echo "Build failed. Check the logs above for details."
-        echo "Common issues:"
-        echo "1. Missing files - ensure all source files are committed"
-        echo "2. Syntax errors - check Kotlin/Gradle syntax"
-        echo "3. Dependency issues - verify all dependencies are correct"
