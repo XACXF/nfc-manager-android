@@ -19,18 +19,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: Check project structure
+    - name: Install Gradle 8.4
       run: |
-        echo "Checking project structure..."
-        ls -la
-        ls -la app/ || echo "app directory not found"
-        cat build.gradle 2>/dev/null || echo "build.gradle not found"
-    
-    - name: Install Gradle
-      run: |
-        wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
-        unzip -q gradle-8.2-bin.zip
-        sudo mv gradle-8.2 /opt/gradle
+        wget https://services.gradle.org/distributions/gradle-8.4-bin.zip
+        unzip -q gradle-8.4-bin.zip
+        sudo mv gradle-8.4 /opt/gradle
         echo "/opt/gradle/bin" >> $GITHUB_PATH
         gradle --version
     
