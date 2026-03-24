@@ -1,26 +1,39 @@
-name: Android CI Simple
+name: Android CI No Cache
+
 on:
   push:
     branches: [ main, master ]
   workflow_dispatch:
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v4
+    
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: 'gradle'
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-    - name: Build APK
-      run: gradle wrapper --gradle-version 8.2 && gradle assembleDebug --stacktrace
+    
+    - name: Download Gradle
+      run: |
+        wget https://services.gradle.org/distributions/gradle-8.2-bin.zip
+        unzip gradle-8.2-bin.zip
+        export PATH=$PWD/gradle-8.2/bin:$PATH
+        gradle --version
+    
+    - name: Build with Gradle
+      run: |
+        export PATH=$PWD/gradle-8.2/bin:$PATH
+        gradle assembleDebug --stacktrace --no-daemon
+    
     - name: Upload APK
       uses: actions/upload-artifact@v4
       if: success()
       with:
         name: nfc-manager-apk
         path: app/build/outputs/apk/debug/*.apk
+        if-no-files-found: warn
