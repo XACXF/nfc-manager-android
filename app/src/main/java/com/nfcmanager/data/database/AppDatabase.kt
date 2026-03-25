@@ -9,7 +9,7 @@ import com.nfcmanager.data.model.NFCData
 
 @Database(
     entities = [NFCData::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
