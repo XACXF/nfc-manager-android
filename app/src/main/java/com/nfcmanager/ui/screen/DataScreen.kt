@@ -192,6 +192,7 @@ fun DataScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilterChips(
     selectedType: NFCType?,
