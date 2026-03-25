@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// 设置中文字体支持
+// 璁剧疆涓枃瀛椾綋鏀寔
 val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
