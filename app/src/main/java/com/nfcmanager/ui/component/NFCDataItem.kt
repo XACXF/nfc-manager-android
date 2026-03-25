@@ -11,10 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import com.nfcmanager.ui.theme.Pink
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nfcmanager.R
 import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import java.text.SimpleDateFormat
@@ -116,7 +118,7 @@ fun NFCDataItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ContentCopy,
-                        contentDescription = "Copy",
+                        contentDescription = stringResource(R.string.copy),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
                     )
@@ -128,7 +130,7 @@ fun NFCDataItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "Edit",
+                        contentDescription = stringResource(R.string.edit),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
                     )
@@ -140,7 +142,7 @@ fun NFCDataItem(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "Delete",
+                        contentDescription = stringResource(R.string.delete),
                         tint = Color.Red,
                         modifier = Modifier.size(18.dp)
                     )
@@ -156,7 +158,7 @@ fun TypeChip(type: NFCType) {
         onClick = {},
         label = {
             Text(
-                text = type.name,
+                text = getTypeName(type),
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium
             )
@@ -189,6 +191,21 @@ fun TypeChip(type: NFCType) {
 }
 
 @Composable
+private fun getTypeName(type: NFCType): String {
+    return when (type) {
+        NFCType.TEXT -> stringResource(R.string.type_text)
+        NFCType.URL -> stringResource(R.string.type_url)
+        NFCType.VCARD -> stringResource(R.string.type_vcard)
+        NFCType.PHONE -> stringResource(R.string.type_phone)
+        NFCType.EMAIL -> stringResource(R.string.type_email)
+        NFCType.WIFI -> stringResource(R.string.type_wifi)
+        NFCType.GEO -> stringResource(R.string.type_geo)
+        NFCType.APP -> stringResource(R.string.type_app)
+        NFCType.UNKNOWN -> stringResource(R.string.type_other)
+    }
+}
+
+@Composable
 fun CompactNFCDataItem(
     nfcData: NFCData,
     onClick: (NFCData) -> Unit
@@ -218,9 +235,9 @@ fun CompactNFCDataItem(
             ) {
                 Text(
                     text = when (nfcData.type) {
-                        NFCType.TEXT -> "T"
-                        NFCType.URL -> "U"
-                        NFCType.VCARD -> "V"
+                        NFCType.TEXT -> "文"
+                        NFCType.URL -> "网"
+                        NFCType.VCARD -> "名"
                         else -> "N"
                     },
                     fontWeight = FontWeight.Bold,
@@ -261,15 +278,16 @@ private fun formatDateTime(date: Date): String {
     return formatter.format(date)
 }
 
+@Composable
 private fun formatTimeAgo(date: Date): String {
     val now = Date()
     val diff = now.time - date.time
     
     return when {
-        diff < 60000 -> "Just now"
-        diff < 3600000 -> "${diff / 60000} min ago"
-        diff < 86400000 -> "${diff / 3600000} hours ago"
-        diff < 604800000 -> "${diff / 86400000} days ago"
+        diff < 60000 -> stringResource(R.string.just_now)
+        diff < 3600000 -> stringResource(R.string.min_ago, diff / 60000)
+        diff < 86400000 -> stringResource(R.string.hours_ago, diff / 3600000)
+        diff < 604800000 -> stringResource(R.string.days_ago, diff / 86400000)
         else -> SimpleDateFormat("MM-dd", Locale.getDefault()).format(date)
     }
 }
