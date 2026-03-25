@@ -144,4 +144,8 @@
     <string name="retry_scan">重新扫描</string>
     <string name="nfc_icon">NFC图标</string>
     <string name="ready_to_scan">准备扫描 - 将手机靠近NFC标签</string>
+    
+    <!-- Help Dialog -->
+    <string name="help_dialog_msg">如有问题，请添加客服微信咨询</string>
+    <string name="customer_service_wechat">qing3287</string>
 </resources>
