@@ -32,7 +32,8 @@ fun NFCDataItem(
     nfcData: NFCData,
     onItemClick: (NFCData) -> Unit,
     onEditClick: (NFCData) -> Unit,
-    onDeleteClick: (NFCData) -> Unit
+    onDeleteClick: (NFCData) -> Unit,
+    onExportClick: (NFCData) -> Unit = {}
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
@@ -142,6 +143,18 @@ fun NFCDataItem(
                     Icon(
                         imageVector = Icons.Filled.ContentCopy,
                         contentDescription = stringResource(R.string.copy),
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(18.dp)
+                    )
+                }
+                
+                IconButton(
+                    onClick = { onExportClick(nfcData) },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.FileDownload,
+                        contentDescription = stringResource(R.string.export),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
                     )
