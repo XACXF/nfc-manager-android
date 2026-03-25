@@ -39,81 +39,128 @@ class VirtualNFCExecutor(private val context: Context) {
     
     /**
      * 发送虚拟NFC Intent
-     * 这会让系统和其他App以为真的收到了NFC标签
+     * 完全模拟系统NFC扫描的Intent格式
      */
     private fun sendVirtualNFCIntent(nfcData: NFCData): Boolean {
         return try {
-            // 优先使用保存的完整NDEF消息（如果有的话）
+            // 优先使用保存的完整NDEF消息
             val ndefMessage = if (nfcData.ndefMessage != null) {
-                // 使用原始NDEF消息（最完整！）
                 NdefMessage(nfcData.ndefMessage)
             } else {
-                // 否则重新构建NDEF消息
                 createNDEFMessage(nfcData)
             }
             
-            // 创建NDEF_DISCOVERED Intent
-            val intent = Intent(NfcAdapter.ACTION_NDEF_DISCOVERED).apply {
-                // 设置正确的URI（光遇会检查这个）
-                if (nfcData.type == NFCType.URL && nfcData.content.startsWith("http")) {
-                    data = android.net.Uri.parse(nfcData.content)
-                }
-                
-                // 设置NDEF消息（这是关键！）
-                putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, arrayOf(ndefMessage))
-                
-                // 添加必要的flags
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            }
+            // 尝试方式1：模拟完整NFC Intent
+            val nfcIntent = createCompleteNFCIntent(nfcData, ndefMessage)
             
-            // 如果有AAR包名，直接用该包名打开
-            if (nfcData.aarPackage != null) {
-                intent.setPackage(nfcData.aarPackage)
+            // 确定目标包名
+            val targetPackage = findTargetPackage(nfcData)
+            
+            if (targetPackage != null) {
+                nfcIntent.setPackage(targetPackage)
+                
+                // 尝试启动
                 try {
-                    context.startActivity(intent)
-                    Log.d(TAG, "Started app with AAR package: ${nfcData.aarPackage}")
+                    context.startActivity(nfcIntent)
+                    Log.d(TAG, "Started app with NFC intent: $targetPackage")
                     return true
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to start with AAR package: ${nfcData.aarPackage}", e)
+                    Log.e(TAG, "NFC intent failed: ${e.message}")
                 }
             }
             
-            // 光遇链接特殊处理
-            if (nfcData.content.contains("sky.thatg.co") || nfcData.content.contains("skygame.com")) {
-                val skyPackages = listOf(
-                    "com.tgc.sky.cn",      // 光遇国服
-                    "com.tgc.sky.android"  // 光遇国际服
-                )
-                
-                for (pkg in skyPackages) {
-                    try {
-                        intent.setPackage(pkg)
-                        context.startActivity(intent)
-                        Log.d(TAG, "Started Sky app with package: $pkg")
-                        return true
-                    } catch (e: Exception) {
-                        Log.d(TAG, "Package $pkg not available: ${e.message}")
-                        continue
+            // 尝试方式2：直接用URI打开（深度链接）
+            if (nfcData.type == NFCType.URL && nfcData.content.startsWith("http")) {
+                try {
+                    val uriIntent = Intent(Intent.ACTION_VIEW, android.net.Uri.parse(nfcData.content)).apply {
+                        if (targetPackage != null) {
+                            setPackage(targetPackage)
+                        }
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     }
+                    context.startActivity(uriIntent)
+                    Log.d(TAG, "Started app with URI intent")
+                    return true
+                } catch (e: Exception) {
+                    Log.e(TAG, "URI intent failed: ${e.message}")
                 }
             }
             
-            // 通用方式启动
-            try {
-                context.startActivity(intent)
-                Log.d(TAG, "Virtual NFC Intent sent successfully")
-                true
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to start activity", e)
-                // 降级为直接执行
-                actionExecutor.execute(nfcData)
-            }
+            // 降级为普通执行
+            actionExecutor.execute(nfcData)
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send virtual NFC intent", e)
             actionExecutor.execute(nfcData)
         }
+    }
+    
+    /**
+     * 创建完整的NFC Intent
+     */
+    private fun createCompleteNFCIntent(nfcData: NFCData, ndefMessage: NdefMessage): Intent {
+        return Intent(NfcAdapter.ACTION_NDEF_DISCOVERED).apply {
+            // 设置URI data
+            if (nfcData.type == NFCType.URL && nfcData.content.startsWith("http")) {
+                data = android.net.Uri.parse(nfcData.content)
+            }
+            
+            // 添加所有NFC extras
+            putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, arrayOf(ndefMessage))
+            
+            // 添加Tag ID
+            if (nfcData.rawData != null) {
+                putExtra(NfcAdapter.EXTRA_ID, nfcData.rawData)
+            }
+            
+            // 关键flags
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING)
+            
+            // 添加category
+            addCategory(Intent.CATEGORY_DEFAULT)
+        }
+    }
+    
+    /**
+     * 查找目标包名
+     */
+    private fun findTargetPackage(nfcData: NFCData): String? {
+        // 如果有AAR包名，直接使用
+        if (!nfcData.aarPackage.isNullOrEmpty()) {
+            return nfcData.aarPackage
+        }
+        
+        // 光遇链接特殊处理
+        if (nfcData.content.contains("sky.thatg.co") || nfcData.content.contains("skygame.com")) {
+            return findSkyPackage()
+        }
+        
+        return null
+    }
+    
+    /**
+     * 查找已安装的光遇包名
+     */
+    private fun findSkyPackage(): String? {
+        val skyPackages = listOf(
+            "com.tgc.sky.cn",      // 光遇国服
+            "com.tgc.sky.android"  // 光遇国际服
+        )
+        
+        val pm = context.packageManager
+        for (pkg in skyPackages) {
+            try {
+                pm.getPackageInfo(pkg, 0)
+                Log.d(TAG, "Found Sky package: $pkg")
+                return pkg
+            } catch (e: Exception) {
+                // 包不存在，继续尝试下一个
+            }
+        }
+        return null
     }
     
     /**
