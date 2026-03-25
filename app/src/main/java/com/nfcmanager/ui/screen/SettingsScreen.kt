@@ -27,8 +27,8 @@ fun SettingsScreen(
     var autoScanEnabled by remember { mutableStateOf(true) }
     var vibrationEnabled by remember { mutableStateOf(true) }
     var soundEnabled by remember { mutableStateOf(true) }
-    var backupFrequency by remember { mutableStateOf("每周") }
-    var dataRetention by remember { mutableStateOf("30天") }
+    var backupFrequency by remember { mutableStateOf("姣忓懆") }
+    var dataRetention by remember { mutableStateOf("30澶?) }
     
     Scaffold(
         topBar = {
@@ -36,7 +36,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "杩斿洖")
                     }
                 }
             )
@@ -48,16 +48,16 @@ fun SettingsScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            // NFC设置
-            SettingsCategory(title = "NFC设置")
+            // NFC璁剧疆
+            SettingsCategory(title = "NFC璁剧疆")
             
             SettingsItem(
                 icon = Icons.Filled.Nfc,
-                title = "NFC状态",
+                title = "NFC鐘舵€?,
                 subtitle = when (nfcStatus) {
-                    com.nfcmanager.nfc.NFCManager.NFCStatus.ENABLED -> "已启用"
-                    com.nfcmanager.nfc.NFCManager.NFCStatus.DISABLED -> "未启用"
-                    com.nfcmanager.nfc.NFCManager.NFCStatus.NOT_SUPPORTED -> "不支持"
+                    com.nfcmanager.nfc.NFCManager.NFCStatus.ENABLED -> "宸插惎鐢?
+                    com.nfcmanager.nfc.NFCManager.NFCStatus.DISABLED -> "鏈惎鐢?
+                    com.nfcmanager.nfc.NFCManager.NFCStatus.NOT_SUPPORTED -> "涓嶆敮鎸?
                 },
                 trailing = {
                     Chip(
@@ -65,9 +65,9 @@ fun SettingsScreen(
                         label = {
                             Text(
                                 when (nfcStatus) {
-                                    com.nfcmanager.nfc.NFCManager.NFCStatus.ENABLED -> "正常"
-                                    com.nfcmanager.nfc.NFCManager.NFCStatus.DISABLED -> "警告"
-                                    com.nfcmanager.nfc.NFCManager.NFCStatus.NOT_SUPPORTED -> "错误"
+                                    com.nfcmanager.nfc.NFCManager.NFCStatus.ENABLED -> "姝ｅ父"
+                                    com.nfcmanager.nfc.NFCManager.NFCStatus.DISABLED -> "璀﹀憡"
+                                    com.nfcmanager.nfc.NFCManager.NFCStatus.NOT_SUPPORTED -> "閿欒"
                                 }
                             )
                         },
@@ -90,7 +90,7 @@ fun SettingsScreen(
             SettingsItem(
                 icon = Icons.Filled.AutoAwesome,
                 title = stringResource(R.string.auto_scan),
-                subtitle = "自动检测并读取NFC标签",
+                subtitle = "鑷姩妫€娴嬪苟璇诲彇NFC鏍囩",
                 trailing = {
                     Switch(
                         checked = autoScanEnabled,
@@ -101,13 +101,13 @@ fun SettingsScreen(
             
             Divider(modifier = Modifier.padding(horizontal = 16.dp))
             
-            // 通知设置
-            SettingsCategory(title = "通知设置")
+            // 閫氱煡璁剧疆
+            SettingsCategory(title = "閫氱煡璁剧疆")
             
             SettingsItem(
                 icon = Icons.Filled.Vibration,
-                title = "振动反馈",
-                subtitle = "扫描成功时振动",
+                title = "鎸姩鍙嶉",
+                subtitle = "鎵弿鎴愬姛鏃舵尟鍔?,
                 trailing = {
                     Switch(
                         checked = vibrationEnabled,
@@ -118,8 +118,8 @@ fun SettingsScreen(
             
             SettingsItem(
                 icon = Icons.Filled.VolumeUp,
-                title = "声音提示",
-                subtitle = "扫描成功时播放提示音",
+                title = "澹伴煶鎻愮ず",
+                subtitle = "鎵弿鎴愬姛鏃舵挱鏀炬彁绀洪煶",
                 trailing = {
                     Switch(
                         checked = soundEnabled,
@@ -130,82 +130,82 @@ fun SettingsScreen(
             
             Divider(modifier = Modifier.padding(horizontal = 16.dp))
             
-            // 数据管理
-            SettingsCategory(title = "数据管理")
+            // 鏁版嵁绠＄悊
+            SettingsCategory(title = "鏁版嵁绠＄悊")
             
             SettingsItem(
                 icon = Icons.Filled.Backup,
                 title = stringResource(R.string.backup),
-                subtitle = "自动备份频率",
+                subtitle = "鑷姩澶囦唤棰戠巼",
                 trailing = {
                     Text(backupFrequency)
                 },
                 onClick = {
-                    // 打开备份频率选择
+                    // 鎵撳紑澶囦唤棰戠巼閫夋嫨
                 }
             )
             
             SettingsItem(
                 icon = Icons.Filled.Restore,
                 title = stringResource(R.string.restore),
-                subtitle = "从备份恢复数据",
+                subtitle = "浠庡浠芥仮澶嶆暟鎹?,
                 trailing = {},
                 onClick = {
-                    // 打开恢复界面
+                    // 鎵撳紑鎭㈠鐣岄潰
                 }
             )
             
             SettingsItem(
                 icon = Icons.Filled.Delete,
-                title = "数据保留",
-                subtitle = "自动清理旧数据",
+                title = "鏁版嵁淇濈暀",
+                subtitle = "鑷姩娓呯悊鏃ф暟鎹?,
                 trailing = {
                     Text(dataRetention)
                 },
                 onClick = {
-                    // 打开数据保留设置
+                    // 鎵撳紑鏁版嵁淇濈暀璁剧疆
                 }
             )
             
             Divider(modifier = Modifier.padding(horizontal = 16.dp))
             
-            // 其他设置
-            SettingsCategory(title = "其他")
+            // 鍏朵粬璁剧疆
+            SettingsCategory(title = "鍏朵粬")
             
             SettingsItem(
                 icon = Icons.Filled.Info,
                 title = stringResource(R.string.about),
-                subtitle = "版本信息和使用说明",
+                subtitle = "鐗堟湰淇℃伅鍜屼娇鐢ㄨ鏄?,
                 trailing = {},
                 onClick = {
-                    // 打开关于页面
+                    // 鎵撳紑鍏充簬椤甸潰
                 }
             )
             
             SettingsItem(
                 icon = Icons.Filled.Help,
                 title = stringResource(R.string.help),
-                subtitle = "常见问题和使用教程",
+                subtitle = "甯歌闂鍜屼娇鐢ㄦ暀绋?,
                 trailing = {},
                 onClick = {
-                    // 打开帮助页面
+                    // 鎵撳紑甯姪椤甸潰
                 }
             )
             
             SettingsItem(
                 icon = Icons.Filled.Share,
-                title = "分享应用",
-                subtitle = "推荐给朋友",
+                title = "鍒嗕韩搴旂敤",
+                subtitle = "鎺ㄨ崘缁欐湅鍙?,
                 trailing = {},
                 onClick = {
-                    // 分享应用
+                    // 鍒嗕韩搴旂敤
                 }
             )
             
             Divider(modifier = Modifier.padding(horizontal = 16.dp))
             
-            // 危险区域
-            SettingsCategory(title = "危险操作", color = Color.Red)
+            // 鍗遍櫓鍖哄煙
+            SettingsCategory(title = "鍗遍櫓鎿嶄綔", color = Color.Red)
             
             Card(
                 modifier = Modifier
@@ -220,7 +220,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "清空所有数据",
+                        text = "娓呯┖鎵€鏈夋暟鎹?,
                         fontWeight = FontWeight.Bold,
                         color = Color.Red
                     )
@@ -228,7 +228,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     
                     Text(
-                        text = "这将删除所有保存的NFC记录，操作不可恢复",
+                        text = "杩欏皢鍒犻櫎鎵€鏈変繚瀛樼殑NFC璁板綍锛屾搷浣滀笉鍙仮澶?,
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
@@ -237,23 +237,23 @@ fun SettingsScreen(
                     
                     OutlinedButton(
                         onClick = {
-                            // 清空数据
+                            // 娓呯┖鏁版嵁
                         },
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = Color.Red
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("清空所有数据")
+                        Text("娓呯┖鎵€鏈夋暟鎹?)
                     }
                 }
             }
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // 应用信息
+            // 搴旂敤淇℃伅
             Text(
-                text = "NFC管理器 v1.0.0",
+                text = "NFC绠＄悊鍣?v1.0.0",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
@@ -263,7 +263,7 @@ fun SettingsScreen(
             )
             
             Text(
-                text = "© 2025 NFC Manager Team",
+                text = "漏 2025 NFC Manager Team",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
