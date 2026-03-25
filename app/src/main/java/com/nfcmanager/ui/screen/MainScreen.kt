@@ -79,7 +79,7 @@ fun MainScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // 最近读取区域
+            // 鏈€杩戣鍙栧尯鍩?
             Text(
                 text = stringResource(R.string.recent_nfc),
                 fontSize = 18.sp,
@@ -117,9 +117,9 @@ fun MainScreen(
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // 快速操作区域
+            // 蹇€熸搷浣滃尯鍩?
             Text(
-                text = "快速操作",
+                text = "蹇€熸搷浣?,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -130,28 +130,28 @@ fun MainScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 QuickActionButton(
-                    title = "读取标签",
-                    description = "扫描NFC标签",
+                    title = "璇诲彇鏍囩",
+                    description = "鎵弿NFC鏍囩",
                     icon = Icons.Filled.Nfc,
                     onClick = onReadNFC,
                     modifier = Modifier.weight(1f)
                 )
                 
                 QuickActionButton(
-                    title = "管理数据",
-                    description = "查看历史记录",
+                    title = "绠＄悊鏁版嵁",
+                    description = "鏌ョ湅鍘嗗彶璁板綍",
                     icon = Icons.Filled.Storage,
                     onClick = onViewData,
                     modifier = Modifier.weight(1f)
                 )
             }
             
-            // NFC状态提示
+            // NFC鐘舵€佹彁绀?
             when (nfcStatus) {
                 NFCManager.NFCStatus.NOT_SUPPORTED -> {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "您的设备不支持NFC功能",
+                        text = "鎮ㄧ殑璁惧涓嶆敮鎸丯FC鍔熻兘",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -160,7 +160,7 @@ fun MainScreen(
                 NFCManager.NFCStatus.DISABLED -> {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "请前往系统设置开启NFC功能",
+                        text = "璇峰墠寰€绯荤粺璁剧疆寮€鍚疦FC鍔熻兘",
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -259,9 +259,9 @@ private fun formatTime(date: java.util.Date): String {
     val diff = now.time - date.time
     
     return when {
-        diff < 60000 -> "刚刚"
-        diff < 3600000 -> "${diff / 60000}分钟前"
-        diff < 86400000 -> "${diff / 3600000}小时前"
-        else -> "${diff / 86400000}天前"
+        diff < 60000 -> "鍒氬垰"
+        diff < 3600000 -> "${diff / 60000}鍒嗛挓鍓?
+        diff < 86400000 -> "${diff / 3600000}灏忔椂鍓?
+        else -> "${diff / 86400000}澶╁墠"
     }
 }
