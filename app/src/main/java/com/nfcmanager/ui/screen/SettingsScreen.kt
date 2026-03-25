@@ -37,7 +37,7 @@ fun SettingsScreen(
                 title = { Text(stringResource(R.string.settings)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -49,22 +49,22 @@ fun SettingsScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsCategory(title = "NFC Settings")
+            SettingsCategory(title = stringResource(R.string.nfc_settings))
             
             SettingsItem(
                 icon = Icons.Filled.Nfc,
-                title = "NFC Status",
+                title = stringResource(R.string.nfc_status),
                 subtitle = when (nfcStatus) {
-                    NFCManager.NFCStatus.ENABLED -> "Enabled"
-                    NFCManager.NFCStatus.DISABLED -> "Disabled"
-                    NFCManager.NFCStatus.NOT_SUPPORTED -> "Not Supported"
+                    NFCManager.NFCStatus.ENABLED -> stringResource(R.string.nfc_enabled)
+                    NFCManager.NFCStatus.DISABLED -> stringResource(R.string.nfc_disabled)
+                    NFCManager.NFCStatus.NOT_SUPPORTED -> stringResource(R.string.nfc_not_supported)
                 }
             )
             
             SettingsItem(
                 icon = Icons.Filled.AutoAwesome,
                 title = stringResource(R.string.auto_scan),
-                subtitle = "Auto detect and read NFC tags",
+                subtitle = stringResource(R.string.auto_scan_desc),
                 trailing = {
                     Switch(
                         checked = autoScanEnabled,
@@ -75,12 +75,12 @@ fun SettingsScreen(
             
             Divider()
             
-            SettingsCategory(title = "Notifications")
+            SettingsCategory(title = stringResource(R.string.notifications))
             
             SettingsItem(
                 icon = Icons.Filled.Vibration,
-                title = "Vibration",
-                subtitle = "Vibrate on scan success",
+                title = stringResource(R.string.vibration),
+                subtitle = stringResource(R.string.vibration_desc),
                 trailing = {
                     Switch(
                         checked = vibrationEnabled,
@@ -91,8 +91,8 @@ fun SettingsScreen(
             
             SettingsItem(
                 icon = Icons.Filled.VolumeUp,
-                title = "Sound",
-                subtitle = "Play sound on scan success",
+                title = stringResource(R.string.sound),
+                subtitle = stringResource(R.string.sound_desc),
                 trailing = {
                     Switch(
                         checked = soundEnabled,
@@ -103,39 +103,39 @@ fun SettingsScreen(
             
             Divider()
             
-            SettingsCategory(title = "Data Management")
+            SettingsCategory(title = stringResource(R.string.data_management_title))
             
             SettingsItem(
                 icon = Icons.Filled.Backup,
                 title = stringResource(R.string.backup),
-                subtitle = "Auto backup frequency"
+                subtitle = stringResource(R.string.backup_desc)
             )
             
             SettingsItem(
                 icon = Icons.Filled.Restore,
                 title = stringResource(R.string.restore),
-                subtitle = "Restore data from backup"
+                subtitle = stringResource(R.string.restore_desc)
             )
             
             Divider()
             
-            SettingsCategory(title = "Other")
+            SettingsCategory(title = stringResource(R.string.other))
             
             SettingsItem(
                 icon = Icons.Filled.Info,
                 title = stringResource(R.string.about),
-                subtitle = "Version info and instructions"
+                subtitle = stringResource(R.string.about_desc)
             )
             
             SettingsItem(
                 icon = Icons.Filled.Help,
                 title = stringResource(R.string.help),
-                subtitle = "FAQ and tutorials"
+                subtitle = stringResource(R.string.help_desc)
             )
             
             Divider()
             
-            SettingsCategory(title = "Danger Zone", color = Color.Red)
+            SettingsCategory(title = stringResource(R.string.danger_zone), color = Color.Red)
             
             Card(
                 modifier = Modifier
@@ -149,7 +149,7 @@ fun SettingsScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Clear All Data",
+                        text = stringResource(R.string.clear_all_data),
                         fontWeight = FontWeight.Bold,
                         color = Color.Red
                     )
@@ -157,7 +157,7 @@ fun SettingsScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     
                     Text(
-                        text = "This will delete all saved NFC records. This action cannot be undone.",
+                        text = stringResource(R.string.clear_all_data_msg),
                         fontSize = 14.sp,
                         color = Color.Gray
                     )
@@ -171,7 +171,7 @@ fun SettingsScreen(
                         ),
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Text("Clear All Data")
+                        Text(stringResource(R.string.clear_all_data))
                     }
                 }
             }
@@ -179,7 +179,7 @@ fun SettingsScreen(
             Spacer(modifier = Modifier.height(32.dp))
             
             Text(
-                text = "NFC Manager v1.0.0",
+                text = stringResource(R.string.app_version),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
@@ -189,7 +189,7 @@ fun SettingsScreen(
             )
             
             Text(
-                text = "© 2025 NFC Manager Team",
+                text = stringResource(R.string.copyright),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 32.dp),
