@@ -45,18 +45,18 @@ fun DataScreen(
                 title = { Text(stringResource(R.string.local_data)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "杩斿洖")
                     }
                 },
                 actions = {
-                    // 筛选按钮
+                    // 绛涢€夋寜閽?
                     IconButton(onClick = { showFilterMenu = true }) {
-                        Icon(Icons.Filled.FilterList, contentDescription = "筛选")
+                        Icon(Icons.Filled.FilterList, contentDescription = "绛涢€?)
                     }
                     
-                    // 导出按钮
+                    // 瀵煎嚭鎸夐挳
                     IconButton(onClick = { showExportDialog = true }) {
-                        Icon(Icons.Filled.FileDownload, contentDescription = "导出")
+                        Icon(Icons.Filled.FileDownload, contentDescription = "瀵煎嚭")
                     }
                 }
             )
@@ -65,10 +65,10 @@ fun DataScreen(
             if (displayData.isNotEmpty()) {
                 ExtendedFloatingActionButton(
                     onClick = {
-                        // 批量操作
+                        // 鎵归噺鎿嶄綔
                     },
-                    icon = { Icon(Icons.Filled.DeleteSweep, contentDescription = "批量删除") },
-                    text = { Text("批量删除") }
+                    icon = { Icon(Icons.Filled.DeleteSweep, contentDescription = "鎵归噺鍒犻櫎") },
+                    text = { Text("鎵归噺鍒犻櫎") }
                 )
             }
         }
@@ -78,7 +78,7 @@ fun DataScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 搜索框
+            // 鎼滅储妗?
             OutlinedTextField(
                 value = searchQuery,
                 onValueChange = viewModel::updateSearchQuery,
@@ -92,14 +92,14 @@ fun DataScreen(
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { viewModel.updateSearchQuery("") }) {
-                            Icon(Icons.Filled.Clear, contentDescription = "清除")
+                            Icon(Icons.Filled.Clear, contentDescription = "娓呴櫎")
                         }
                     }
                 },
                 singleLine = true
             )
             
-            // 筛选标签
+            // 绛涢€夋爣绛?
             FilterChips(
                 selectedType = filterType,
                 onTypeSelected = viewModel::updateFilterType,
@@ -108,7 +108,7 @@ fun DataScreen(
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // 数据显示
+            // 鏁版嵁鏄剧ず
             if (displayData.isEmpty()) {
                 EmptyState(
                     searchQuery = searchQuery,
@@ -125,10 +125,10 @@ fun DataScreen(
                         NFCDataItem(
                             nfcData = nfcData,
                             onItemClick = {
-                                // 查看详情或触发功能
+                                // 鏌ョ湅璇︽儏鎴栬Е鍙戝姛鑳?
                             },
                             onEditClick = {
-                                // 编辑数据
+                                // 缂栬緫鏁版嵁
                             },
                             onDeleteClick = {
                                 selectedItemForDelete = nfcData
@@ -139,7 +139,7 @@ fun DataScreen(
                 }
             }
             
-            // 统计信息
+            // 缁熻淇℃伅
             if (displayData.isNotEmpty()) {
                 DataStatistics(
                     totalCount = displayData.size,
@@ -156,7 +156,7 @@ fun DataScreen(
         }
     }
     
-    // 筛选菜单
+    // 绛涢€夎彍鍗?
     if (showFilterMenu) {
         FilterMenu(
             selectedType = filterType,
@@ -172,12 +172,12 @@ fun DataScreen(
         )
     }
     
-    // 删除确认对话框
+    // 鍒犻櫎纭瀵硅瘽妗?
     if (showDeleteDialog && selectedItemForDelete != null) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text(stringResource(R.string.confirm_delete)) },
-            text = { Text("确定要删除这条NFC记录吗？删除后无法恢复。") },
+            text = { Text("纭畾瑕佸垹闄よ繖鏉FC璁板綍鍚楋紵鍒犻櫎鍚庢棤娉曟仮澶嶃€?) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -197,12 +197,12 @@ fun DataScreen(
         )
     }
     
-    // 导出对话框
+    // 瀵煎嚭瀵硅瘽妗?
     if (showExportDialog) {
         ExportDialog(
             onDismiss = { showExportDialog = false },
             onExport = { format ->
-                // 导出数据
+                // 瀵煎嚭鏁版嵁
                 showExportDialog = false
             }
         )
@@ -219,28 +219,28 @@ fun FilterChips(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        // 全部
+        // 鍏ㄩ儴
         FilterChip(
             selected = selectedType == null,
             onClick = { onTypeSelected(null) },
             label = { Text(stringResource(R.string.type_all)) }
         )
         
-        // 文本
+        // 鏂囨湰
         FilterChip(
             selected = selectedType == NFCType.TEXT,
             onClick = { onTypeSelected(NFCType.TEXT) },
             label = { Text(stringResource(R.string.type_text)) }
         )
         
-        // 网址
+        // 缃戝潃
         FilterChip(
             selected = selectedType == NFCType.URL,
             onClick = { onTypeSelected(NFCType.URL) },
             label = { Text(stringResource(R.string.type_url)) }
         )
         
-        // 名片
+        // 鍚嶇墖
         FilterChip(
             selected = selectedType == NFCType.VCARD,
             onClick = { onTypeSelected(NFCType.VCARD) },
@@ -274,8 +274,8 @@ fun EmptyState(
             
             Text(
                 text = when {
-                    searchQuery.isNotEmpty() -> "没有找到\"$searchQuery\"相关的NFC记录"
-                    filterType != null -> "没有${filterType.name}类型的NFC记录"
+                    searchQuery.isNotEmpty() -> "娌℃湁鎵惧埌\"$searchQuery\"鐩稿叧鐨凬FC璁板綍"
+                    filterType != null -> "娌℃湁${filterType.name}绫诲瀷鐨凬FC璁板綍"
                     else -> stringResource(R.string.no_data)
                 },
                 fontSize = 16.sp,
@@ -286,7 +286,7 @@ fun EmptyState(
             if (searchQuery.isEmpty() && filterType == null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "尝试读取一些NFC标签来开始使用",
+                    text = "灏濊瘯璇诲彇涓€浜汵FC鏍囩鏉ュ紑濮嬩娇鐢?,
                     fontSize = 14.sp,
                     color = Color.LightGray,
                     textAlign = TextAlign.Center
@@ -317,7 +317,7 @@ fun DataStatistics(
         ) {
             Column(horizontalAlignment = Alignment.Start) {
                 Text(
-                    text = "数据统计",
+                    text = "鏁版嵁缁熻",
                     fontSize = 14.sp,
                     color = Color.Gray,
                     fontWeight = FontWeight.Medium
@@ -326,7 +326,7 @@ fun DataStatistics(
                 Spacer(modifier = Modifier.height(4.dp))
                 
                 Text(
-                    text = "总计: $totalCount 条",
+                    text = "鎬昏: $totalCount 鏉?,
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -335,7 +335,7 @@ fun DataStatistics(
             if (filteredCount < totalCount) {
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "筛选结果",
+                        text = "绛涢€夌粨鏋?,
                         fontSize = 14.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Medium
@@ -344,7 +344,7 @@ fun DataStatistics(
                     Spacer(modifier = Modifier.height(4.dp))
                     
                     Text(
-                        text = "$filteredCount 条",
+                        text = "$filteredCount 鏉?,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -364,7 +364,7 @@ fun FilterMenu(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("筛选类型") },
+        title = { Text("绛涢€夌被鍨?) },
         text = {
             Column {
                 NFCType.values().forEach { type ->
@@ -394,13 +394,13 @@ fun FilterMenu(
                         onClick = { onClearFilter() }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("全部类型")
+                    Text("鍏ㄩ儴绫诲瀷")
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("确定")
+                Text("纭畾")
             }
         }
     )
@@ -416,7 +416,7 @@ fun ExportDialog(
         title = { Text(stringResource(R.string.export)) },
         text = {
             Column {
-                Text("选择导出格式:")
+                Text("閫夋嫨瀵煎嚭鏍煎紡:")
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Row(
@@ -427,14 +427,14 @@ fun ExportDialog(
                         onClick = { onExport("CSV") },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("CSV格式")
+                        Text("CSV鏍煎紡")
                     }
                     
                     OutlinedButton(
                         onClick = { onExport("TXT") },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("文本格式")
+                        Text("鏂囨湰鏍煎紡")
                     }
                 }
             }
