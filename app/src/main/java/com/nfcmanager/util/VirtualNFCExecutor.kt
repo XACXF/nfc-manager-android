@@ -45,19 +45,47 @@ class VirtualNFCExecutor(private val context: Context) {
         return try {
             val ndefMessage = createNDEFMessage(nfcData)
             
-            // 发送NDEF_DISCOVERED Intent
+            // 创建NDEF_DISCOVERED Intent并直接启动Activity
             val intent = Intent(NfcAdapter.ACTION_NDEF_DISCOVERED).apply {
+                setDataAndType(android.net.Uri.parse(nfcData.content), "application/vnd.com.nfcmanager")
                 putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, arrayOf(ndefMessage))
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             }
             
-            context.sendBroadcast(intent)
-            Log.d(TAG, "Virtual NFC Intent sent for type: ${nfcData.type}")
+            // 尝试直接启动光遇
+            if (nfcData.aarPackage != null) {
+                intent.setPackage(nfcData.aarPackage)
+            } else if (nfcData.content.contains("sky.thatg.co") || nfcData.content.contains("skygame.com")) {
+                // 光遇链接，尝试用光遇打开
+                val skyPackages = listOf(
+                    "com.tgc.sky.cn",      // 光遇国服
+                    "com.tgc.sky.android"  // 光遇国际服
+                )
+                
+                for (pkg in skyPackages) {
+                    try {
+                        intent.setPackage(pkg)
+                        context.startActivity(intent)
+                        Log.d(TAG, "Started Sky app with package: $pkg")
+                        return true
+                    } catch (e: Exception) {
+                        Log.d(TAG, "Package $pkg not available: ${e.message}")
+                        continue
+                    }
+                }
+            }
             
-            // 同时也执行实际操作
-            actionExecutor.execute(nfcData)
-            
-            true
+            // 如果没有指定包名或启动失败，尝试通用方式
+            try {
+                context.startActivity(intent)
+                Log.d(TAG, "Virtual NFC Intent sent for type: ${nfcData.type}")
+                true
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start activity, falling back to direct execution", e)
+                // 降级为直接执行
+                actionExecutor.execute(nfcData)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send virtual NFC intent", e)
             // 降级为直接执行
