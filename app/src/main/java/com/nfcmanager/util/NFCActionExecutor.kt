@@ -20,7 +20,7 @@ import java.net.URLEncoder
 class NFCActionExecutor(private val context: Context) {
     
     fun execute(nfcData: NFCData): Boolean {
-        // 濡傛灉鏈堿AR鍖呭悕锛屼紭鍏堢敤璇ュ寘鍚嶆墦寮€
+        // 如果有AAR包名，优先用该包名打开
         if (!nfcData.aarPackage.isNullOrEmpty()) {
             return openWithPackage(nfcData.content, nfcData.aarPackage)
         }
@@ -32,7 +32,7 @@ class NFCActionExecutor(private val context: Context) {
             NFCType.GEO -> openMap(nfcData.content)
             NFCType.WIFI -> connectWifi(nfcData.content)
             NFCType.TEXT -> {
-                // 鏅鸿兘璇嗗埆锛氬鏋滃唴瀹圭湅璧锋潵鍍忕數璇濆彿鐮侊紝鍒欐嫧鎵撶數璇?
+                // 智能识别：如果内容看起来像电话号码，则拨打电话
                 val content = nfcData.content.trim()
                 if (content.matches(Regex("^[+]?[0-9\\s\\-()]{7,15}$"))) {
                     dialPhone(content)
@@ -48,7 +48,7 @@ class NFCActionExecutor(private val context: Context) {
             NFCType.VCARD -> importContact(nfcData.content)
             NFCType.APP -> openApp(nfcData.content)
             NFCType.UNKNOWN -> {
-                // 瀵逛簬鏈煡绫诲瀷锛屼篃灏濊瘯鏅鸿兘璇嗗埆
+                // 对于未知类型，也尝试智能识别
                 val content = nfcData.content.trim()
                 if (content.startsWith("http://") || content.startsWith("https://")) {
                     openUrl(content)
@@ -68,7 +68,7 @@ class NFCActionExecutor(private val context: Context) {
     }
     
     /**
-     * 鐢ㄦ寚瀹氬寘鍚嶆墦寮€閾炬帴锛堟敮鎸丄AR锛?
+     * 用指定包名打开链接（支持AAR）
      */
     private fun openWithPackage(url: String, packageName: String): Boolean {
         return try {
@@ -78,20 +78,20 @@ class NFCActionExecutor(private val context: Context) {
                 Uri.parse("https://$url")
             }
             
-            // 鐢ㄦ寚瀹氬寘鍚嶆墦寮€
+            // 用指定包名打开
             val intent = Intent(Intent.ACTION_VIEW, uri).apply {
                 setPackage(packageName)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
             
             context.startActivity(intent)
-            Toast.makeText(context, "姝ｅ湪鐢?$packageName 鎵撳紑...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "正在用 $packageName 打开...", Toast.LENGTH_SHORT).show()
             Log.d("NFCActionExecutor", "Opening with package: $packageName")
             true
         } catch (e: Exception) {
             Log.e("NFCActionExecutor", "Failed to open with package: $packageName", e)
-            // 闄嶇骇涓烘櫘閫氭墦寮€鏂瑰紡
-            Toast.makeText(context, "鎸囧畾搴旂敤鏈畨瑁咃紝灏濊瘯鍏朵粬鏂瑰紡...", Toast.LENGTH_SHORT).show()
+            // 降级为普通打开方式
+            Toast.makeText(context, "指定应用未安装，尝试其他方式...", Toast.LENGTH_SHORT).show()
             openUrl(url)
         }
     }
@@ -104,7 +104,7 @@ class NFCActionExecutor(private val context: Context) {
                 Uri.parse("https://$url")
             }
             
-            // 妫€娴嬪厜閬囧窘绔犻摼鎺ワ紝鐢ㄥ厜閬嘇PP鎵撳紑
+            // 检测光遇徽章链接，用光遇APP打开
             if (url.contains("sky.thatg.co") || url.contains("skygame.com")) {
                 return openWithSkyGame(url)
             }
@@ -121,22 +121,22 @@ class NFCActionExecutor(private val context: Context) {
     }
     
     /**
-     * 鐢ㄥ厜閬嘇PP鎵撳紑閾炬帴
+     * 用光遇APP打开链接
      */
     private fun openWithSkyGame(url: String): Boolean {
         return try {
             val uri = Uri.parse(url)
             
-            // 灏濊瘯鐢ㄥ厜閬嘇PP鎵撳紑
+            // 尝试用光遇APP打开
             val skyPackages = listOf(
-                "com.tgc.sky.cn",      // 鍏夐亣鍥芥湇
-                "com.tgc.sky.android", // 鍏夐亣鍥介檯鏈?
-                "com.netease.sky"      // 缃戞槗鐗堬紙濡傛灉鏈夛級
+                "com.tgc.sky.cn",      // 光遇国服
+                "com.tgc.sky.android", // 光遇国际服
+                "com.netease.sky"      // 网易版（如果有）
             )
             
             var opened = false
             
-            // 灏濊瘯姣忎釜鍙兘鐨勫寘鍚?
+            // 尝试每个可能的包名
             for (packageName in skyPackages) {
                 try {
                     val intent = Intent(Intent.ACTION_VIEW, uri).apply {
@@ -144,34 +144,34 @@ class NFCActionExecutor(private val context: Context) {
                         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     }
                     context.startActivity(intent)
-                    Toast.makeText(context, "姝ｅ湪鐢ㄥ厜閬囨墦寮€...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "正在用光遇打开...", Toast.LENGTH_SHORT).show()
                     opened = true
                     break
                 } catch (e: Exception) {
-                    // 杩欎釜鍖呭悕涓嶅瓨鍦紝缁х画灏濊瘯涓嬩竴涓?
+                    // 这个包名不存在，继续尝试下一个
                     continue
                 }
             }
             
-            // 濡傛灉娌℃湁瀹夎鍏夐亣锛屾墦寮€搴旂敤鍟嗗簵
+            // 如果没有安装光遇，打开应用商店
             if (!opened) {
                 try {
-                    val storeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=鍏夐亣"))
+                    val storeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=光遇"))
                     storeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(storeIntent)
-                    Toast.makeText(context, "鏈畨瑁呭厜閬囷紝姝ｅ湪鎵撳紑搴旂敤鍟嗗簵...", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "未安装光遇，正在打开应用商店...", Toast.LENGTH_SHORT).show()
                 } catch (e: Exception) {
-                    // 闄嶇骇涓烘祻瑙堝櫒鎵撳紑
+                    // 降级为浏览器打开
                     val intent = Intent(Intent.ACTION_VIEW, uri)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
-                    Toast.makeText(context, "璇峰厛瀹夎鍏夐亣娓告垙", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "请先安装光遇游戏", Toast.LENGTH_SHORT).show()
                 }
             }
             
             true
         } catch (e: Exception) {
-            Toast.makeText(context, "鎵撳紑鍏夐亣澶辫触: ${e.message}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "打开光遇失败: ${e.message}", Toast.LENGTH_SHORT).show()
             false
         }
     }
