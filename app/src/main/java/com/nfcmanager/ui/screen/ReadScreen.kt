@@ -1,6 +1,5 @@
 package com.nfcmanager.ui.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,7 +44,7 @@ fun ReadScreen(
                 title = { Text(stringResource(R.string.read_nfc)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -59,22 +58,19 @@ fun ReadScreen(
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // NFC状态显示
             NFCStatusCard(status = nfcStatus)
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // 扫描动画
             NFCScanningAnimation(isScanning = isScanning)
             
             Spacer(modifier = Modifier.height(24.dp))
             
-            // 扫描提示
             Text(
                 text = if (isScanning) {
                     stringResource(R.string.scanning)
                 } else {
-                    "将NFC标签靠近手机背部"
+                    "Place NFC tag near the back of your phone"
                 },
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
@@ -84,7 +80,7 @@ fun ReadScreen(
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
-                text = "保持标签贴近手机直到扫描完成",
+                text = "Keep the tag close until scanning is complete",
                 fontSize = 14.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
@@ -92,23 +88,19 @@ fun ReadScreen(
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            // 模拟扫描按钮（实际应用中应该由NFC事件触发）
             Button(
                 onClick = {
                     isScanning = true
-                    // 模拟扫描过程
-                    // 实际应用中应该在这里处理真实的NFC扫描
-                    simulateScan(viewModel, onResult = { result ->
+                    simulateScan(viewModel) { result ->
                         isScanning = false
                         scanResult = result
-                    })
+                    }
                 },
                 enabled = nfcStatus == NFCManager.NFCStatus.ENABLED && !isScanning
             ) {
-                Text("开始扫描")
+                Text("Start Scan")
             }
             
-            // 显示扫描结果
             scanResult?.let { result ->
                 Spacer(modifier = Modifier.height(32.dp))
                 
@@ -124,13 +116,8 @@ fun ReadScreen(
                                 noteText = ""
                                 scanResult = null
                             },
-                            onCopy = {
-                                // 复制到剪贴板
-                                // 实际应用中应该实现剪贴板功能
-                            },
-                            onShare = {
-                                // 分享功能
-                            }
+                            onCopy = {},
+                            onShare = {}
                         )
                     }
                     is NFCManager.NFCReadResult.Error -> {
@@ -139,10 +126,10 @@ fun ReadScreen(
                             onRetry = {
                                 scanResult = null
                                 isScanning = true
-                                simulateScan(viewModel, onResult = { newResult ->
+                                simulateScan(viewModel) { newResult ->
                                     isScanning = false
                                     scanResult = newResult
-                                })
+                                }
                             }
                         )
                     }
@@ -168,7 +155,6 @@ fun ScanResultCard(
         Column(
             modifier = Modifier.padding(20.dp)
         ) {
-            // 成功标题
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -178,23 +164,23 @@ fun ScanResultCard(
                     text = stringResource(R.string.scan_complete),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.Green
+                    color = Color(0xFF4CAF50)
                 )
                 
-                Chip(
+                AssistChip(
                     onClick = {},
                     label = { Text(nfcData.type.name) },
-                    colors = ChipDefaults.chipColors(
+                    colors = AssistChipDefaults.assistChipColors(
                         containerColor = when (nfcData.type) {
                             com.nfcmanager.data.model.NFCType.TEXT -> Color.Blue.copy(alpha = 0.1f)
                             com.nfcmanager.data.model.NFCType.URL -> Color.Green.copy(alpha = 0.1f)
-                            com.nfcmanager.data.model.NFCType.VCARD -> Color.Purple.copy(alpha = 0.1f)
+                            com.nfcmanager.data.model.NFCType.VCARD -> Color.Magenta.copy(alpha = 0.1f)
                             else -> Color.Gray.copy(alpha = 0.1f)
                         },
                         labelColor = when (nfcData.type) {
                             com.nfcmanager.data.model.NFCType.TEXT -> Color.Blue
                             com.nfcmanager.data.model.NFCType.URL -> Color.Green
-                            com.nfcmanager.data.model.NFCType.VCARD -> Color.Purple
+                            com.nfcmanager.data.model.NFCType.VCARD -> Color.Magenta
                             else -> Color.Gray
                         }
                     )
@@ -203,7 +189,6 @@ fun ScanResultCard(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // 数据内容
             Text(
                 text = stringResource(R.string.content),
                 fontSize = 14.sp,
@@ -228,7 +213,6 @@ fun ScanResultCard(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // 备注输入
             Text(
                 text = stringResource(R.string.add_note),
                 fontSize = 14.sp,
@@ -248,12 +232,10 @@ fun ScanResultCard(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // 操作按钮
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 保存按钮
                 FilledTonalButton(
                     onClick = onSave,
                     modifier = Modifier.weight(1f)
@@ -263,7 +245,6 @@ fun ScanResultCard(
                     Text(stringResource(R.string.save))
                 }
                 
-                // 复制按钮
                 OutlinedButton(
                     onClick = onCopy,
                     modifier = Modifier.weight(1f)
@@ -273,7 +254,6 @@ fun ScanResultCard(
                     Text(stringResource(R.string.copy))
                 }
                 
-                // 分享按钮
                 OutlinedButton(
                     onClick = onShare,
                     modifier = Modifier.weight(1f)
@@ -326,26 +306,20 @@ fun ErrorCard(
                     containerColor = Color.Red
                 )
             ) {
-                Text("重试扫描")
+                Text("Retry Scan")
             }
         }
     }
 }
 
-/**
- * 模拟扫描过程（实际应用中应该由真实的NFC事件触发）
- */
 private fun simulateScan(
     viewModel: MainViewModel,
     onResult: (NFCManager.NFCReadResult) -> Unit
 ) {
-    // 模拟扫描延迟
-    // 实际应用中应该监听真实的NFC事件
     val sampleData = NFCData(
-        content = "https://example.com\n这是一个示例NFC标签内容",
+        content = "https://example.com\nSample NFC tag content",
         type = com.nfcmanager.data.model.NFCType.URL
     )
     
-    // 模拟扫描成功
     onResult(NFCManager.NFCReadResult.Success(sampleData))
 }
