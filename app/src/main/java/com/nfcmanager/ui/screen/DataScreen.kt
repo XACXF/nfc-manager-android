@@ -45,15 +45,15 @@ fun DataScreen(
                 title = { Text(stringResource(R.string.local_data)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
                     IconButton(onClick = { showFilterMenu = true }) {
-                        Icon(Icons.Filled.FilterList, contentDescription = "Filter")
+                        Icon(Icons.Filled.FilterList, contentDescription = stringResource(R.string.filter))
                     }
                     IconButton(onClick = { showExportDialog = true }) {
-                        Icon(Icons.Filled.FileDownload, contentDescription = "Export")
+                        Icon(Icons.Filled.FileDownload, contentDescription = stringResource(R.string.export))
                     }
                 }
             )
@@ -62,8 +62,8 @@ fun DataScreen(
             if (displayData.isNotEmpty()) {
                 ExtendedFloatingActionButton(
                     onClick = {},
-                    icon = { Icon(Icons.Filled.DeleteSweep, contentDescription = "Batch delete") },
-                    text = { Text("Batch Delete") }
+                    icon = { Icon(Icons.Filled.DeleteSweep, contentDescription = null) },
+                    text = { Text(stringResource(R.string.batch_delete)) }
                 )
             }
         }
@@ -86,7 +86,7 @@ fun DataScreen(
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { viewModel.updateSearchQuery("") }) {
-                            Icon(Icons.Filled.Clear, contentDescription = "Clear")
+                            Icon(Icons.Filled.Clear, contentDescription = stringResource(R.string.clear))
                         }
                     }
                 },
@@ -162,7 +162,7 @@ fun DataScreen(
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
             title = { Text(stringResource(R.string.confirm_delete)) },
-            text = { Text("Are you sure you want to delete this NFC record? This action cannot be undone.") },
+            text = { Text(stringResource(R.string.confirm_delete_msg)) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -251,8 +251,8 @@ fun EmptyState(
             
             Text(
                 text = when {
-                    searchQuery.isNotEmpty() -> "No NFC records found for \"$searchQuery\""
-                    filterType != null -> "No ${filterType.name} type NFC records"
+                    searchQuery.isNotEmpty() -> stringResource(R.string.no_data_search, searchQuery)
+                    filterType != null -> stringResource(R.string.no_data_filter, filterType.name)
                     else -> stringResource(R.string.no_data)
                 },
                 fontSize = 16.sp,
@@ -263,7 +263,7 @@ fun EmptyState(
             if (searchQuery.isEmpty() && filterType == null) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Try reading some NFC tags to get started",
+                    text = stringResource(R.string.try_read_nfc),
                     fontSize = 14.sp,
                     color = Color.LightGray,
                     textAlign = TextAlign.Center
@@ -294,14 +294,14 @@ fun DataStatistics(
         ) {
             Column(horizontalAlignment = Alignment.Start) {
                 Text(
-                    text = "Data Statistics",
+                    text = stringResource(R.string.data_statistics),
                     fontSize = 14.sp,
                     color = Color.Gray,
                     fontWeight = FontWeight.Medium
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "Total: $totalCount",
+                    text = "${stringResource(R.string.total)}: $totalCount",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -310,7 +310,7 @@ fun DataStatistics(
             if (filteredCount < totalCount) {
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "Filtered Results",
+                        text = stringResource(R.string.filtered_results),
                         fontSize = 14.sp,
                         color = Color.Gray,
                         fontWeight = FontWeight.Medium
@@ -337,7 +337,7 @@ fun FilterMenu(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Filter by Type") },
+        title = { Text(stringResource(R.string.filter_by_type)) },
         text = {
             Column {
                 NFCType.values().forEach { type ->
@@ -352,7 +352,7 @@ fun FilterMenu(
                             onClick = { onTypeSelected(type) }
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Text(type.name)
+                        Text(getTypeName(type))
                     }
                 }
                 
@@ -367,13 +367,13 @@ fun FilterMenu(
                         onClick = { onClearFilter() }
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("All Types")
+                    Text(stringResource(R.string.all_types))
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("OK")
+                Text(stringResource(R.string.ok))
             }
         }
     )
@@ -389,7 +389,7 @@ fun ExportDialog(
         title = { Text(stringResource(R.string.export)) },
         text = {
             Column {
-                Text("Select export format:")
+                Text(stringResource(R.string.select_export_format))
                 Spacer(modifier = Modifier.height(16.dp))
                 
                 Row(
@@ -400,14 +400,14 @@ fun ExportDialog(
                         onClick = { onExport("CSV") },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("CSV")
+                        Text(stringResource(R.string.export_csv))
                     }
                     
                     OutlinedButton(
                         onClick = { onExport("TXT") },
                         modifier = Modifier.weight(1f)
                     ) {
-                        Text("TXT")
+                        Text(stringResource(R.string.export_txt))
                     }
                 }
             }
@@ -418,4 +418,19 @@ fun ExportDialog(
             }
         }
     )
+}
+
+@Composable
+private fun getTypeName(type: NFCType): String {
+    return when (type) {
+        NFCType.TEXT -> stringResource(R.string.type_text)
+        NFCType.URL -> stringResource(R.string.type_url)
+        NFCType.VCARD -> stringResource(R.string.type_vcard)
+        NFCType.PHONE -> stringResource(R.string.type_phone)
+        NFCType.EMAIL -> stringResource(R.string.type_email)
+        NFCType.WIFI -> stringResource(R.string.type_wifi)
+        NFCType.GEO -> stringResource(R.string.type_geo)
+        NFCType.APP -> stringResource(R.string.type_app)
+        NFCType.UNKNOWN -> stringResource(R.string.type_other)
+    }
 }
