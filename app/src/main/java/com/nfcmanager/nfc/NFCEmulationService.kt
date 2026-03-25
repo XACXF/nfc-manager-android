@@ -36,7 +36,7 @@ class NFCEmulationService : HostApduService() {
         
         // NDEF文件控制TLV
         private val NDEF_FILE_CONTROL_TLV = byteArrayOf(
-            0x04, 0x06, 0xE1, 0x04, 0x00, 0xFF.toByte(), 0x00, 0x00
+            0x04, 0x06, 0xE1.toByte(), 0x04, 0x00, 0xFF.toByte(), 0x00, 0x00
         )
     }
     
