@@ -43,7 +43,14 @@ class VirtualNFCExecutor(private val context: Context) {
      */
     private fun sendVirtualNFCIntent(nfcData: NFCData): Boolean {
         return try {
-            val ndefMessage = createNDEFMessage(nfcData)
+            // 优先使用保存的完整NDEF消息（如果有的话）
+            val ndefMessage = if (nfcData.ndefMessage != null) {
+                // 使用原始NDEF消息（最完整！）
+                NdefMessage(nfcData.ndefMessage)
+            } else {
+                // 否则重新构建NDEF消息
+                createNDEFMessage(nfcData)
+            }
             
             // 创建NDEF_DISCOVERED Intent
             val intent = Intent(NfcAdapter.ACTION_NDEF_DISCOVERED).apply {
