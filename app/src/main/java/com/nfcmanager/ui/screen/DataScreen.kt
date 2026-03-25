@@ -31,6 +31,7 @@ import android.widget.Toast
 @Composable
 fun DataScreen(
     onBack: () -> Unit,
+    onWrite: (NFCData) -> Unit = {},
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -136,6 +137,9 @@ fun DataScreen(
                             onDeleteClick = {
                                 selectedItemForDelete = nfcData
                                 showDeleteDialog = true
+                            },
+                            onWriteToNFC = { data ->
+                                onWrite(data)
                             },
                             onExportClick = {
                                 selectedItemForExport = nfcData
