@@ -225,4 +225,11 @@
     <string name="saved_data">宸蹭繚瀛樼殑鏁版嵁</string>
     <string name="no_saved_data">鏆傛棤宸蹭繚瀛樼殑鏁版嵁</string>
     <string name="read_nfc_first">璇峰厛鍦ㄣ€岃鍙栥€嶉〉闈㈡壂鎻廚FC鍗＄墖淇濆瓨鏁版嵁</string>
+    
+    <!-- Quick Execute -->
+    <string name="quick_execute">蹇嵎鎵ц</string>
+    <string name="quick_execute_desc">鐩存帴鎵цNFC鍔ㄤ綔锛屾棤闇€鍒峰崱</string>
+    <string name="executing">姝ｅ湪鎵ц...</string>
+    <string name="execute_success">鎵ц鎴愬姛</string>
+    <string name="execute_failed">鎵ц澶辫触</string>
 </resources>
