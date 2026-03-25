@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -18,8 +19,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nfcmanager.R
+import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import com.nfcmanager.ui.component.NFCDataItem
+import com.nfcmanager.util.NFCActionExecutor
 import com.nfcmanager.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,8 +37,13 @@ fun DataScreen(
     
     var showFilterMenu by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var selectedItemForDelete by remember { mutableStateOf<com.nfcmanager.data.model.NFCData?>(null) }
+    var selectedItemForDelete by remember { mutableStateOf<NFCData?>(null) }
     var showExportDialog by remember { mutableStateOf(false) }
+    var showActionDialog by remember { mutableStateOf(false) }
+    var selectedItemForAction by remember { mutableStateOf<NFCData?>(null) }
+    
+    val context = LocalContext.current
+    val actionExecutor = remember { NFCActionExecutor(context) }
     
     val displayData = viewModel.getDisplayData()
     
@@ -116,7 +124,10 @@ fun DataScreen(
                     items(displayData) { nfcData ->
                         NFCDataItem(
                             nfcData = nfcData,
-                            onItemClick = {},
+                            onItemClick = {
+                                selectedItemForAction = nfcData
+                                showActionDialog = true
+                            },
                             onEditClick = {},
                             onDeleteClick = {
                                 selectedItemForDelete = nfcData
@@ -187,6 +198,44 @@ fun DataScreen(
             onDismiss = { showExportDialog = false },
             onExport = { format ->
                 showExportDialog = false
+            }
+        )
+    }
+    
+    if (showActionDialog && selectedItemForAction != null) {
+        AlertDialog(
+            onDismissRequest = { showActionDialog = false },
+            title = { Text(stringResource(R.string.execute_action)) },
+            text = {
+                Column {
+                    Text(
+                        text = stringResource(R.string.action_dialog_msg),
+                        fontSize = 14.sp,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        text = selectedItemForAction!!.content,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        selectedItemForAction?.let { actionExecutor.execute(it) }
+                        showActionDialog = false
+                        selectedItemForAction = null
+                    }
+                ) {
+                    Text(actionExecutor.getActionDescription(selectedItemForAction!!.type))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showActionDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
             }
         )
     }
