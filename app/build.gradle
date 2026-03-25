@@ -77,6 +77,9 @@ dependencies {
     
     // NFC
     implementation 'androidx.appcompat:appcompat:1.6.1'
+
+    // Material Components
+    implementation 'com.google.android.material:material:1.11.0'
     
     // CSV Export
     implementation 'com.github.doyaaaaaken:kotlin-csv-jvm:1.9.3'
