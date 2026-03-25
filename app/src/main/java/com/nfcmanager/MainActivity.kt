@@ -62,8 +62,7 @@ class MainActivity : ComponentActivity() {
             NfcAdapter.FLAG_READER_NFC_A or 
             NfcAdapter.FLAG_READER_NFC_B or
             NfcAdapter.FLAG_READER_NFC_F or
-            NfcAdapter.FLAG_READER_NFC_V or
-            NfcAdapter.FLAG_READER_NDEF,
+            NfcAdapter.FLAG_READER_NFC_V,
             null
         )
     }
