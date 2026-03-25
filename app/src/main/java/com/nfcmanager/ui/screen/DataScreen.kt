@@ -22,8 +22,10 @@ import com.nfcmanager.R
 import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import com.nfcmanager.ui.component.NFCDataItem
+import com.nfcmanager.util.DataExporter
 import com.nfcmanager.util.NFCActionExecutor
 import com.nfcmanager.viewmodel.MainViewModel
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,9 +43,11 @@ fun DataScreen(
     var showExportDialog by remember { mutableStateOf(false) }
     var showActionDialog by remember { mutableStateOf(false) }
     var selectedItemForAction by remember { mutableStateOf<NFCData?>(null) }
+    var selectedItemForExport by remember { mutableStateOf<NFCData?>(null) }
     
     val context = LocalContext.current
     val actionExecutor = remember { NFCActionExecutor(context) }
+    val dataExporter = remember { DataExporter(context) }
     
     val displayData = viewModel.getDisplayData()
     
@@ -132,6 +136,10 @@ fun DataScreen(
                             onDeleteClick = {
                                 selectedItemForDelete = nfcData
                                 showDeleteDialog = true
+                            },
+                            onExportClick = {
+                                selectedItemForExport = nfcData
+                                showExportDialog = true
                             }
                         )
                     }
@@ -195,9 +203,41 @@ fun DataScreen(
     
     if (showExportDialog) {
         ExportDialog(
-            onDismiss = { showExportDialog = false },
-            onExport = { format ->
-                showExportDialog = false
+            isSingleExport = selectedItemForExport != null,
+            totalCount = uiState.allData.size,
+            onDismiss = { 
+                showExportDialog = false 
+                selectedItemForExport = null
+            },
+            onExport = { format, exportAll ->
+                val result = if (exportAll) {
+                    if (uiState.allData.isEmpty()) {
+                        Toast.makeText(context, R.string.no_data_to_export, Toast.LENGTH_SHORT).show()
+                        return@ExportDialog
+                    }
+                    dataExporter.exportAll(uiState.allData, 
+                        if (format == "CSV") DataExporter.ExportFormat.CSV else DataExporter.ExportFormat.TXT)
+                } else {
+                    selectedItemForExport?.let { data ->
+                        dataExporter.exportSingle(data, 
+                            if (format == "CSV") DataExporter.ExportFormat.CSV else DataExporter.ExportFormat.TXT)
+                    } ?: run {
+                        Toast.makeText(context, R.string.no_data_to_export, Toast.LENGTH_SHORT).show()
+                        return@ExportDialog
+                    }
+                }
+                
+                when (result) {
+                    is DataExporter.ExportResult.Success -> {
+                        Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
+                        // 询问是否分享文件
+                        showExportDialog = false
+                        selectedItemForExport = null
+                    }
+                    is DataExporter.ExportResult.Error -> {
+                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         )
     }
@@ -430,38 +470,89 @@ fun FilterMenu(
 
 @Composable
 fun ExportDialog(
+    isSingleExport: Boolean,
+    totalCount: Int,
     onDismiss: () -> Unit,
-    onExport: (String) -> Unit
+    onExport: (format: String, exportAll: Boolean) -> Unit
 ) {
+    var selectedFormat by remember { mutableStateOf("CSV") }
+    var exportAll by remember { mutableStateOf(!isSingleExport) }
+    
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text(stringResource(R.string.export)) },
         text = {
             Column {
-                Text(stringResource(R.string.select_export_format))
+                // 导出范围选择
+                Text(
+                    text = stringResource(R.string.select_export_range),
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = !exportAll,
+                        onClick = { exportAll = false },
+                        enabled = isSingleExport
+                    )
+                    Text(
+                        text = stringResource(R.string.export_single),
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = exportAll,
+                        onClick = { exportAll = true }
+                    )
+                    Text(
+                        text = "${stringResource(R.string.export_all)} ($totalCount)",
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                
                 Spacer(modifier = Modifier.height(16.dp))
+                
+                // 格式选择
+                Text(
+                    text = stringResource(R.string.select_export_format),
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.height(8.dp))
                 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    OutlinedButton(
-                        onClick = { onExport("CSV") },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(stringResource(R.string.export_csv))
-                    }
-                    
-                    OutlinedButton(
-                        onClick = { onExport("TXT") },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text(stringResource(R.string.export_txt))
-                    }
+                    FilterChip(
+                        selected = selectedFormat == "CSV",
+                        onClick = { selectedFormat = "CSV" },
+                        label = { Text("CSV") }
+                    )
+                    FilterChip(
+                        selected = selectedFormat == "TXT",
+                        onClick = { selectedFormat = "TXT" },
+                        label = { Text("TXT") }
+                    )
                 }
             }
         },
         confirmButton = {
+            TextButton(
+                onClick = { onExport(selectedFormat, exportAll) }
+            ) {
+                Text(stringResource(R.string.export))
+            }
+        },
+        dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(stringResource(R.string.cancel))
             }
