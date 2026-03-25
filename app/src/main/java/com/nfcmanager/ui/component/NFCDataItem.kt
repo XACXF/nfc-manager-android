@@ -49,16 +49,13 @@ fun NFCDataItem(
         Column(
             modifier = Modifier.padding(16.dp)
         ) {
-            // 标题行
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 类型标签
                 TypeChip(type = nfcData.type)
                 
-                // 时间
                 Text(
                     text = formatDateTime(nfcData.readTime),
                     fontSize = 12.sp,
@@ -68,7 +65,6 @@ fun NFCDataItem(
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // 内容预览
             Text(
                 text = nfcData.content.take(80) + if (nfcData.content.length > 80) "..." else "",
                 fontSize = 14.sp,
@@ -76,7 +72,6 @@ fun NFCDataItem(
                 maxLines = 3
             )
             
-            // 备注（如果有）
             if (nfcData.note.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
                 Card(
@@ -109,46 +104,42 @@ fun NFCDataItem(
             
             Spacer(modifier = Modifier.height(12.dp))
             
-            // 操作按钮
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 复制按钮
                 IconButton(
-                    onClick = { /* 复制内容到剪贴板 */ },
+                    onClick = { },
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.ContentCopy,
-                        contentDescription = "复制",
+                        contentDescription = "Copy",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
                 
-                // 编辑按钮
                 IconButton(
                     onClick = { onEditClick(nfcData) },
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Edit,
-                        contentDescription = "编辑",
+                        contentDescription = "Edit",
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
                     )
                 }
                 
-                // 删除按钮
                 IconButton(
                     onClick = { onDeleteClick(nfcData) },
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
-                        contentDescription = "删除",
+                        contentDescription = "Delete",
                         tint = Color.Red,
                         modifier = Modifier.size(18.dp)
                     )
@@ -160,45 +151,35 @@ fun NFCDataItem(
 
 @Composable
 fun TypeChip(type: NFCType) {
-    Chip(
+    AssistChip(
         onClick = {},
         label = {
             Text(
-                text = when (type) {
-                    NFCType.TEXT -> "文本"
-                    NFCType.URL -> "网址"
-                    NFCType.VCARD -> "名片"
-                    NFCType.PHONE -> "电话"
-                    NFCType.EMAIL -> "邮箱"
-                    NFCType.WIFI -> "WiFi"
-                    NFCType.GEO -> "位置"
-                    NFCType.APP -> "应用"
-                    else -> "其他"
-                },
+                text = type.name,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Medium
             )
         },
-        colors = ChipDefaults.chipColors(
+        colors = AssistChipDefaults.assistChipColors(
             containerColor = when (type) {
                 NFCType.TEXT -> Color.Blue.copy(alpha = 0.1f)
                 NFCType.URL -> Color.Green.copy(alpha = 0.1f)
-                NFCType.VCARD -> Color.Purple.copy(alpha = 0.1f)
-                NFCType.PHONE -> Color.Orange.copy(alpha = 0.1f)
+                NFCType.VCARD -> Color.Magenta.copy(alpha = 0.1f)
+                NFCType.PHONE -> Color(0xFFFF9800).copy(alpha = 0.1f)
                 NFCType.EMAIL -> Color.Cyan.copy(alpha = 0.1f)
                 NFCType.WIFI -> Color.Pink.copy(alpha = 0.1f)
-                NFCType.GEO -> Color.Indigo.copy(alpha = 0.1f)
+                NFCType.GEO -> Color(0xFF3F51B5).copy(alpha = 0.1f)
                 NFCType.APP -> Color.Magenta.copy(alpha = 0.1f)
                 else -> Color.Gray.copy(alpha = 0.1f)
             },
             labelColor = when (type) {
                 NFCType.TEXT -> Color.Blue
                 NFCType.URL -> Color.Green
-                NFCType.VCARD -> Color.Purple
-                NFCType.PHONE -> Color.Orange
+                NFCType.VCARD -> Color.Magenta
+                NFCType.PHONE -> Color(0xFFFF9800)
                 NFCType.EMAIL -> Color.Cyan
                 NFCType.WIFI -> Color.Pink
-                NFCType.GEO -> Color.Indigo
+                NFCType.GEO -> Color(0xFF3F51B5)
                 NFCType.APP -> Color.Magenta
                 else -> Color.Gray
             }
@@ -221,7 +202,6 @@ fun CompactNFCDataItem(
             modifier = Modifier.padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 类型图标
             Box(
                 modifier = Modifier
                     .size(40.dp)
@@ -246,7 +226,7 @@ fun CompactNFCDataItem(
                     color = when (nfcData.type) {
                         NFCType.TEXT -> Color.Blue
                         NFCType.URL -> Color.Green
-                        NFCType.VCARD -> Color.Purple
+                        NFCType.VCARD -> Color.Magenta
                         else -> Color.Gray
                     }
                 )
@@ -254,7 +234,6 @@ fun CompactNFCDataItem(
             
             Spacer(modifier = Modifier.width(12.dp))
             
-            // 内容和时间
             Column(
                 modifier = Modifier.weight(1f)
             ) {
@@ -286,10 +265,10 @@ private fun formatTimeAgo(date: Date): String {
     val diff = now.time - date.time
     
     return when {
-        diff < 60000 -> "刚刚"
-        diff < 3600000 -> "${diff / 60000}分钟前"
-        diff < 86400000 -> "${diff / 3600000}小时前"
-        diff < 604800000 -> "${diff / 86400000}天前"
+        diff < 60000 -> "Just now"
+        diff < 3600000 -> "${diff / 60000} min ago"
+        diff < 86400000 -> "${diff / 3600000} hours ago"
+        diff < 604800000 -> "${diff / 86400000} days ago"
         else -> SimpleDateFormat("MM-dd", Locale.getDefault()).format(date)
     }
 }
