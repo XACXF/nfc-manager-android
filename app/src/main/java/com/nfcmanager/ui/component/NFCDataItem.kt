@@ -140,7 +140,8 @@ fun NFCDataItem(
                 // 快捷执行按钮（虚拟刷卡）
                 IconButton(
                     onClick = {
-                        virtualExecutor.quickExecute(nfcData)
+                        // 使用虚拟NFC Intent方式，让光遇等APP能正确识别
+                        virtualExecutor.executeVirtualNFC(nfcData, useIntent = true)
                         Toast.makeText(context, "执行: ${virtualExecutor.getActionDescription(nfcData)}", Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.size(36.dp)
