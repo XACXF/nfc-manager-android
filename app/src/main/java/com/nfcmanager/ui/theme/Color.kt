@@ -17,3 +17,5 @@ val BlueLight = Color(0xFFBBDEFB)
 val GreenSuccess = Color(0xFF4CAF50)
 val YellowWarning = Color(0xFFFFC107)
 val RedError = Color(0xFFF44336)
+
+val Pink = Color(0xFFE91E63)
