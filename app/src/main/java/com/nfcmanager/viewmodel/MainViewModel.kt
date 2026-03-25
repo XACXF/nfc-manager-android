@@ -2,6 +2,7 @@ package com.nfcmanager.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.nfcmanager.MainActivity
 import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import com.nfcmanager.data.repository.NFCRepository
@@ -32,9 +33,16 @@ class MainViewModel @Inject constructor(
     private val _filterType = MutableStateFlow<NFCType?>(null)
     val filterType: StateFlow<NFCType?> = _filterType.asStateFlow()
     
+    private val _scanResult = MutableStateFlow<NFCManager.NFCReadResult?>(null)
+    val scanResult: StateFlow<NFCManager.NFCReadResult?> = _scanResult.asStateFlow()
+    
+    private val _isScanning = MutableStateFlow(false)
+    val isScanning: StateFlow<Boolean> = _isScanning.asStateFlow()
+    
     init {
         loadRecentNFCData()
         observeNFCData()
+        observeNFCTags()
     }
     
     private fun loadRecentNFCData() {
@@ -51,6 +59,38 @@ class MainViewModel @Inject constructor(
                 _uiState.update { it.copy(allData = dataList) }
             }
         }
+    }
+    
+    /**
+     * 监听来自 MainActivity 的 NFC 标签事件
+     */
+    private fun observeNFCTags() {
+        viewModelScope.launch {
+            MainActivity.nfcTagFlow.collect { tag ->
+                tag?.let {
+                    _isScanning.value = true
+                    val result = nfcManager.readNFCTag(it)
+                    _scanResult.value = result
+                    _isScanning.value = false
+                }
+            }
+        }
+    }
+    
+    /**
+     * 开始扫描模式
+     */
+    fun startScanning() {
+        _isScanning.value = true
+        _scanResult.value = null
+    }
+    
+    /**
+     * 清除扫描结果
+     */
+    fun clearScanResult() {
+        _scanResult.value = null
+        _isScanning.value = false
     }
     
     fun updateSearchQuery(query: String) {
