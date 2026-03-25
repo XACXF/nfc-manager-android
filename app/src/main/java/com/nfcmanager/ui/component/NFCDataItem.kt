@@ -11,8 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.nfcmanager.ui.theme.Pink
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +24,7 @@ import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import java.text.SimpleDateFormat
 import java.util.*
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,6 +34,9 @@ fun NFCDataItem(
     onEditClick: (NFCData) -> Unit,
     onDeleteClick: (NFCData) -> Unit
 ) {
+    val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
+    
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,12 +75,25 @@ fun NFCDataItem(
             
             Spacer(modifier = Modifier.height(8.dp))
             
+            // 显示自定义名称或内容
             Text(
-                text = nfcData.content.take(80) + if (nfcData.content.length > 80) "..." else "",
-                fontSize = 14.sp,
-                lineHeight = 18.sp,
-                maxLines = 3
+                text = if (nfcData.name.isNotEmpty()) nfcData.name else nfcData.content.take(80) + if (nfcData.content.length > 80) "..." else "",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Medium,
+                lineHeight = 20.sp,
+                maxLines = 2
             )
+            
+            // 如果有自定义名称，显示内容预览
+            if (nfcData.name.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = nfcData.content.take(60) + if (nfcData.content.length > 60) "..." else "",
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    maxLines = 1
+                )
+            }
             
             if (nfcData.note.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
@@ -113,7 +133,10 @@ fun NFCDataItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = { },
+                    onClick = { 
+                        clipboardManager.setText(AnnotatedString(nfcData.content))
+                        Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                    },
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
