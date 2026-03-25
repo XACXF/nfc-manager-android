@@ -9,6 +9,7 @@ import android.net.wifi.WifiNetworkSuggestion
 import android.os.Build
 import android.provider.ContactsContract
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.nfcmanager.R
@@ -19,6 +20,11 @@ import java.net.URLEncoder
 class NFCActionExecutor(private val context: Context) {
     
     fun execute(nfcData: NFCData): Boolean {
+        // 濡傛灉鏈堿AR鍖呭悕锛屼紭鍏堢敤璇ュ寘鍚嶆墦寮€
+        if (!nfcData.aarPackage.isNullOrEmpty()) {
+            return openWithPackage(nfcData.content, nfcData.aarPackage)
+        }
+        
         return when (nfcData.type) {
             NFCType.URL -> openUrl(nfcData.content)
             NFCType.PHONE -> dialPhone(nfcData.content)
@@ -58,6 +64,35 @@ class NFCActionExecutor(private val context: Context) {
                     copyToClipboard(content)
                 }
             }
+        }
+    }
+    
+    /**
+     * 鐢ㄦ寚瀹氬寘鍚嶆墦寮€閾炬帴锛堟敮鎸丄AR锛?
+     */
+    private fun openWithPackage(url: String, packageName: String): Boolean {
+        return try {
+            val uri = if (url.startsWith("http://") || url.startsWith("https://")) {
+                Uri.parse(url)
+            } else {
+                Uri.parse("https://$url")
+            }
+            
+            // 鐢ㄦ寚瀹氬寘鍚嶆墦寮€
+            val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                setPackage(packageName)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            
+            context.startActivity(intent)
+            Toast.makeText(context, "姝ｅ湪鐢?$packageName 鎵撳紑...", Toast.LENGTH_SHORT).show()
+            Log.d("NFCActionExecutor", "Opening with package: $packageName")
+            true
+        } catch (e: Exception) {
+            Log.e("NFCActionExecutor", "Failed to open with package: $packageName", e)
+            // 闄嶇骇涓烘櫘閫氭墦寮€鏂瑰紡
+            Toast.makeText(context, "鎸囧畾搴旂敤鏈畨瑁咃紝灏濊瘯鍏朵粬鏂瑰紡...", Toast.LENGTH_SHORT).show()
+            openUrl(url)
         }
     }
     
