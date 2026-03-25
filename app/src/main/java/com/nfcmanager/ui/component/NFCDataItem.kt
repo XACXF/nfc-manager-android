@@ -80,7 +80,7 @@ fun NFCDataItem(
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // 鏄剧ず鑷畾涔夊悕绉版垨鍐呭
+            // 显示自定义名称或内容
             Text(
                 text = if (nfcData.name.isNotEmpty()) nfcData.name else nfcData.content.take(80) + if (nfcData.content.length > 80) "..." else "",
                 fontSize = 16.sp,
@@ -89,7 +89,7 @@ fun NFCDataItem(
                 maxLines = 2
             )
             
-            // 濡傛灉鏈夎嚜瀹氫箟鍚嶇О锛屾樉绀哄唴瀹归瑙?
+            // 如果有自定义名称，显示内容预览
             if (nfcData.name.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -137,17 +137,17 @@ fun NFCDataItem(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 蹇嵎鎵ц鎸夐挳锛堣櫄鎷熷埛鍗★級
+                // 快捷执行按钮（虚拟刷卡）
                 IconButton(
                     onClick = {
                         virtualExecutor.quickExecute(nfcData)
-                        Toast.makeText(context, "鎵ц: ${virtualExecutor.getActionDescription(nfcData)}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "执行: ${virtualExecutor.getActionDescription(nfcData)}", Toast.LENGTH_SHORT).show()
                     },
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.PlayArrow,
-                        contentDescription = "蹇嵎鎵ц",
+                        contentDescription = "快捷执行",
                         tint = Color(0xFF4CAF50),
                         modifier = Modifier.size(20.dp)
                     )
@@ -291,9 +291,9 @@ fun CompactNFCDataItem(
             ) {
                 Text(
                     text = when (nfcData.type) {
-                        NFCType.TEXT -> "鏂?
-                        NFCType.URL -> "缃?
-                        NFCType.VCARD -> "鍚?
+                        NFCType.TEXT -> "文"
+                        NFCType.URL -> "网"
+                        NFCType.VCARD -> "名"
                         else -> "N"
                     },
                     fontWeight = FontWeight.Bold,
