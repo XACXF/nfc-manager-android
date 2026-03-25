@@ -64,7 +64,7 @@ fun EmulationScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-            // 鏍囬鍖哄煙
+            // 标题区域
             Text(
                 text = stringResource(R.string.emulation_title),
                 style = MaterialTheme.typography.headlineMedium,
@@ -81,7 +81,7 @@ fun EmulationScreen(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // 褰撳墠妯℃嫙鐘舵€佸崱鐗?
+            // 当前模拟状态卡片
             EmulationStatusCard(
                 isEmulating = isEmulating,
                 onStop = { viewModel.stopEmulation() }
@@ -89,7 +89,7 @@ fun EmulationScreen(
             
             Spacer(modifier = Modifier.height(16.dp))
             
-            // 鏁版嵁鍒楄〃
+            // 数据列表
             Text(
                 text = "${stringResource(R.string.saved_data)} (${allData.allData.size})",
                 style = MaterialTheme.typography.titleMedium,
@@ -141,7 +141,7 @@ fun EmulationStatusCard(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // 鐘舵€佸浘鏍?
+                // 状态图标
                 Box(
                     modifier = Modifier
                         .size(56.dp)
@@ -161,14 +161,14 @@ fun EmulationStatusCard(
                 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (isEmulating) "姝ｅ湪妯℃嫙涓? else "鏈紑鍚ā鎷?,
+                        text = if (isEmulating) "正在模拟中" else "未开启模拟",
                         color = Color.White,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (isEmulating) "灏嗘墜鏈洪潬杩戣鍗″櫒鍗冲彲璇诲彇" else "閫夋嫨涓嬫柟鏁版嵁寮€濮嬫ā鎷?,
+                        text = if (isEmulating) "将手机靠近读卡器即可读取" else "选择下方数据开始模拟",
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 14.sp
                     )
@@ -183,7 +183,7 @@ fun EmulationStatusCard(
                         ),
                         shape = RoundedCornerShape(8.dp)
                     ) {
-                        Text("鍋滄")
+                        Text("停止")
                     }
                 }
             }
@@ -241,7 +241,7 @@ fun EmulationDataItem(
                 .padding(12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // 绫诲瀷鍥炬爣
+            // 类型图标
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -259,7 +259,7 @@ fun EmulationDataItem(
             
             Spacer(modifier = Modifier.width(12.dp))
             
-            // 鍐呭
+            // 内容
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = data.name.ifEmpty { data.type.name },
@@ -285,7 +285,7 @@ fun EmulationDataItem(
                 )
             }
             
-            // 妯℃嫙鎸夐挳
+            // 模拟按钮
             Button(
                 onClick = onEmulate,
                 colors = ButtonDefaults.buttonColors(
@@ -300,7 +300,7 @@ fun EmulationDataItem(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("妯℃嫙涓?)
+                    Text("模拟中")
                 } else {
                     Icon(
                         imageVector = Icons.Default.Nfc,
@@ -308,7 +308,7 @@ fun EmulationDataItem(
                         modifier = Modifier.size(16.dp)
                     )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("妯℃嫙")
+                    Text("模拟")
                 }
             }
         }
