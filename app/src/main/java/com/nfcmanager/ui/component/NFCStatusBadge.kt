@@ -100,9 +100,9 @@ fun NFCStatusCard(status: NFCManager.NFCStatus) {
                 
                 Text(
                     text = when (status) {
-                        NFCManager.NFCStatus.ENABLED -> "NFC is enabled and ready to use"
-                        NFCManager.NFCStatus.DISABLED -> "NFC is disabled, please enable in settings"
-                        NFCManager.NFCStatus.NOT_SUPPORTED -> "This device does not support NFC"
+                        NFCManager.NFCStatus.ENABLED -> stringResource(R.string.nfc_enabled_detail)
+                        NFCManager.NFCStatus.DISABLED -> stringResource(R.string.nfc_disabled_detail)
+                        NFCManager.NFCStatus.NOT_SUPPORTED -> stringResource(R.string.nfc_not_supported_detail)
                     },
                     fontSize = 14.sp,
                     color = Color.Gray
@@ -136,9 +136,9 @@ fun NFCScanningAnimation(isScanning: Boolean) {
                     .background(MaterialTheme.colorScheme.primary)
             )
         } else {
-            Icon(
+                Icon(
                 imageVector = Icons.Filled.Nfc,
-                contentDescription = "NFC Icon",
+                contentDescription = stringResource(R.string.nfc_icon),
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
             )
