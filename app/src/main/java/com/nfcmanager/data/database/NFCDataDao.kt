@@ -29,23 +29,18 @@ interface NFCDataDao {
     @Query("DELETE FROM nfc_data")
     suspend fun deleteAllNFCData()
     
-    // 搜索功能
     @Query("SELECT * FROM nfc_data WHERE content LIKE '%' || :query || '%' OR note LIKE '%' || :query || '%' ORDER BY readTime DESC")
     fun searchNFCData(query: String): Flow<List<NFCData>>
     
-    // 按类型筛选
     @Query("SELECT * FROM nfc_data WHERE type = :type ORDER BY readTime DESC")
     fun getNFCDataByType(type: NFCType): Flow<List<NFCData>>
     
-    // 按时间范围筛选
     @Query("SELECT * FROM nfc_data WHERE readTime BETWEEN :startDate AND :endDate ORDER BY readTime DESC")
     fun getNFCDataByDateRange(startDate: Date, endDate: Date): Flow<List<NFCData>>
     
-    // 获取最近的数据
     @Query("SELECT * FROM nfc_data ORDER BY readTime DESC LIMIT :limit")
     fun getRecentNFCData(limit: Int): Flow<List<NFCData>>
     
-    // 统计
     @Query("SELECT COUNT(*) FROM nfc_data")
     suspend fun getTotalCount(): Int
     
