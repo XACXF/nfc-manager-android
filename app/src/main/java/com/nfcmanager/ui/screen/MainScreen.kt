@@ -206,6 +206,7 @@ fun RecentNFCCard(nfcData: com.nfcmanager.data.model.NFCData) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuickActionButton(
     title: String,
