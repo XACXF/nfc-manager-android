@@ -45,19 +45,36 @@ class VirtualNFCExecutor(private val context: Context) {
         return try {
             val ndefMessage = createNDEFMessage(nfcData)
             
-            // 创建NDEF_DISCOVERED Intent并直接启动Activity
+            // 创建NDEF_DISCOVERED Intent
             val intent = Intent(NfcAdapter.ACTION_NDEF_DISCOVERED).apply {
-                setDataAndType(android.net.Uri.parse(nfcData.content), "application/vnd.com.nfcmanager")
+                // 设置正确的URI（光遇会检查这个）
+                if (nfcData.type == NFCType.URL && nfcData.content.startsWith("http")) {
+                    data = android.net.Uri.parse(nfcData.content)
+                }
+                
+                // 设置NDEF消息（这是关键！）
                 putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, arrayOf(ndefMessage))
+                
+                // 添加必要的flags
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }
             
-            // 尝试直接启动光遇
+            // 如果有AAR包名，直接用该包名打开
             if (nfcData.aarPackage != null) {
                 intent.setPackage(nfcData.aarPackage)
-            } else if (nfcData.content.contains("sky.thatg.co") || nfcData.content.contains("skygame.com")) {
-                // 光遇链接，尝试用光遇打开
+                try {
+                    context.startActivity(intent)
+                    Log.d(TAG, "Started app with AAR package: ${nfcData.aarPackage}")
+                    return true
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to start with AAR package: ${nfcData.aarPackage}", e)
+                }
+            }
+            
+            // 光遇链接特殊处理
+            if (nfcData.content.contains("sky.thatg.co") || nfcData.content.contains("skygame.com")) {
                 val skyPackages = listOf(
                     "com.tgc.sky.cn",      // 光遇国服
                     "com.tgc.sky.android"  // 光遇国际服
@@ -76,28 +93,31 @@ class VirtualNFCExecutor(private val context: Context) {
                 }
             }
             
-            // 如果没有指定包名或启动失败，尝试通用方式
+            // 通用方式启动
             try {
                 context.startActivity(intent)
-                Log.d(TAG, "Virtual NFC Intent sent for type: ${nfcData.type}")
+                Log.d(TAG, "Virtual NFC Intent sent successfully")
                 true
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to start activity, falling back to direct execution", e)
+                Log.e(TAG, "Failed to start activity", e)
                 // 降级为直接执行
                 actionExecutor.execute(nfcData)
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send virtual NFC intent", e)
-            // 降级为直接执行
             actionExecutor.execute(nfcData)
         }
     }
     
     /**
      * 根据NFC数据创建NDEF消息
+     * 包含URL记录和AAR记录（如果有）
      */
     private fun createNDEFMessage(nfcData: NFCData): NdefMessage {
-        val record = when (nfcData.type) {
+        val records = mutableListOf<NdefRecord>()
+        
+        // 添加主记录（URL、文本等）
+        val mainRecord = when (nfcData.type) {
             NFCType.URL -> createUriRecord(nfcData.content)
             NFCType.PHONE -> createUriRecord("tel:${nfcData.content}")
             NFCType.EMAIL -> createUriRecord("mailto:${nfcData.content}")
@@ -108,8 +128,16 @@ class VirtualNFCExecutor(private val context: Context) {
             NFCType.APP -> createUriRecord(nfcData.content)
             NFCType.UNKNOWN -> createTextRecord(nfcData.content)
         }
+        records.add(mainRecord)
         
-        return NdefMessage(record)
+        // 如果有AAR包名，添加AAR记录（这是关键！）
+        if (!nfcData.aarPackage.isNullOrEmpty()) {
+            val aarRecord = NdefRecord.createApplicationRecord(nfcData.aarPackage)
+            records.add(aarRecord)
+            Log.d(TAG, "Added AAR record for package: ${nfcData.aarPackage}")
+        }
+        
+        return NdefMessage(records.toTypedArray())
     }
     
     /**
