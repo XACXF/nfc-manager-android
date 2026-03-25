@@ -34,9 +34,14 @@ fun ReadScreen(
     viewModel: MainViewModel = hiltViewModel()
 ) {
     val nfcStatus by viewModel.nfcStatus.collectAsState()
-    var isScanning by remember { mutableStateOf(false) }
-    var scanResult by remember { mutableStateOf<NFCManager.NFCReadResult?>(null) }
+    val scanResult by viewModel.scanResult.collectAsState()
+    val isScanning by viewModel.isScanning.collectAsState()
     var noteText by remember { mutableStateOf("") }
+    
+    // 监听扫描结果变化
+    LaunchedEffect(scanResult) {
+        // 当有新的扫描结果时，可以执行一些操作
+    }
     
     Scaffold(
         topBar = {
@@ -88,19 +93,20 @@ fun ReadScreen(
             
             Spacer(modifier = Modifier.height(32.dp))
             
-            Button(
-                onClick = {
-                    isScanning = true
-                    simulateScan(viewModel) { result ->
-                        isScanning = false
-                        scanResult = result
-                    }
-                },
-                enabled = nfcStatus == NFCManager.NFCStatus.ENABLED && !isScanning
-            ) {
-                Text(stringResource(R.string.start_scan))
+            // 真正的NFC扫描不需要点击按钮，但保留一个手动触发按钮
+            // 提示用户只需将手机靠近NFC标签
+            if (nfcStatus == NFCManager.NFCStatus.ENABLED && !isScanning && scanResult == null) {
+                FilledTonalButton(
+                    onClick = { viewModel.startScanning() },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(stringResource(R.string.ready_to_scan))
+                }
             }
             
+            // 显示扫描结果
             scanResult?.let { result ->
                 Spacer(modifier = Modifier.height(32.dp))
                 
@@ -114,23 +120,17 @@ fun ReadScreen(
                                 val dataWithNote = result.data.copy(note = noteText)
                                 viewModel.saveNFCData(dataWithNote)
                                 noteText = ""
-                                scanResult = null
+                                viewModel.clearScanResult()
                             },
                             onCopy = {},
-                            onShare = {}
+                            onShare = {},
+                            onDismiss = { viewModel.clearScanResult() }
                         )
                     }
                     is NFCManager.NFCReadResult.Error -> {
                         ErrorCard(
                             errorMessage = result.message,
-                            onRetry = {
-                                scanResult = null
-                                isScanning = true
-                                simulateScan(viewModel) { newResult ->
-                                    isScanning = false
-                                    scanResult = newResult
-                                }
-                            }
+                            onRetry = { viewModel.clearScanResult() }
                         )
                     }
                 }
@@ -146,7 +146,8 @@ fun ScanResultCard(
     onNoteTextChange: (String) -> Unit,
     onSave: () -> Unit,
     onCopy: () -> Unit,
-    onShare: () -> Unit
+    onShare: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -255,12 +256,12 @@ fun ScanResultCard(
                 }
                 
                 OutlinedButton(
-                    onClick = onShare,
+                    onClick = onDismiss,
                     modifier = Modifier.weight(1f)
                 ) {
                     Icon(Icons.Filled.Share, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text(stringResource(R.string.share))
+                    Text(stringResource(R.string.cancel))
                 }
             }
         }
@@ -310,16 +311,4 @@ fun ErrorCard(
             }
         }
     }
-}
-
-private fun simulateScan(
-    viewModel: MainViewModel,
-    onResult: (NFCManager.NFCReadResult) -> Unit
-) {
-    val sampleData = NFCData(
-        content = "https://example.com\nSample NFC tag content",
-        type = com.nfcmanager.data.model.NFCType.URL
-    )
-    
-    onResult(NFCManager.NFCReadResult.Success(sampleData))
 }
