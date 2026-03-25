@@ -117,7 +117,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             Text(
-                text = "Quick Actions",
+                text = stringResource(R.string.quick_actions),
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -128,16 +128,16 @@ fun MainScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 QuickActionButton(
-                    title = "Read Tag",
-                    description = "Scan NFC tag",
+                    title = stringResource(R.string.read_nfc_tag),
+                    description = stringResource(R.string.read_nfc_desc),
                     icon = Icons.Filled.Nfc,
                     onClick = onReadNFC,
                     modifier = Modifier.weight(1f)
                 )
                 
                 QuickActionButton(
-                    title = "Manage Data",
-                    description = "View history",
+                    title = stringResource(R.string.view_local_data),
+                    description = stringResource(R.string.view_local_data_desc),
                     icon = Icons.Filled.Storage,
                     onClick = onViewData,
                     modifier = Modifier.weight(1f)
@@ -148,7 +148,7 @@ fun MainScreen(
                 NFCManager.NFCStatus.NOT_SUPPORTED -> {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Your device does not support NFC",
+                        text = stringResource(R.string.nfc_not_supported),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -157,7 +157,7 @@ fun MainScreen(
                 NFCManager.NFCStatus.DISABLED -> {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Please enable NFC in system settings",
+                        text = stringResource(R.string.nfc_disabled),
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.fillMaxWidth(),
                         textAlign = TextAlign.Center
@@ -252,14 +252,15 @@ fun QuickActionButton(
     }
 }
 
+@Composable
 private fun formatTime(date: java.util.Date): String {
     val now = java.util.Date()
     val diff = now.time - date.time
     
     return when {
-        diff < 60000 -> "Just now"
-        diff < 3600000 -> "${diff / 60000} min ago"
-        diff < 86400000 -> "${diff / 3600000} hours ago"
-        else -> "${diff / 86400000} days ago"
+        diff < 60000 -> stringResource(R.string.just_now)
+        diff < 3600000 -> stringResource(R.string.min_ago, diff / 60000)
+        diff < 86400000 -> stringResource(R.string.hours_ago, diff / 3600000)
+        else -> stringResource(R.string.days_ago, diff / 86400000)
     }
 }
