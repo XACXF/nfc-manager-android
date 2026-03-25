@@ -1,235 +1,235 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Info -->
-    <string name="app_name">NFC寰界珷绠＄悊鍣?/string>
-    <string name="app_version">NFC寰界珷绠＄悊鍣?v1.0.0</string>
-    <string name="copyright">漏 2025 NFC寰界珷绠＄悊鍣ㄥ洟闃?/string>
+    <string name="app_name">NFC徽章管理器</string>
+    <string name="app_version">NFC徽章管理器 v1.0.0</string>
+    <string name="copyright">© 2025 NFC徽章管理器团队</string>
     
     <!-- NFC Status -->
-    <string name="nfc_status">NFC鐘舵€?/string>
-    <string name="nfc_enabled">宸插惎鐢?/string>
-    <string name="nfc_disabled">鏈惎鐢?/string>
-    <string name="nfc_not_supported">涓嶆敮鎸?/string>
+    <string name="nfc_status">NFC状态</string>
+    <string name="nfc_enabled">已启用</string>
+    <string name="nfc_disabled">未启用</string>
+    <string name="nfc_not_supported">不支持</string>
     
     <!-- Navigation -->
-    <string name="read_nfc">璇诲彇鏍囩</string>
-    <string name="local_data">鏈湴鏁版嵁</string>
-    <string name="settings">璁剧疆</string>
-    <string name="back">杩斿洖</string>
+    <string name="read_nfc">读取标签</string>
+    <string name="local_data">本地数据</string>
+    <string name="settings">设置</string>
+    <string name="back">返回</string>
     
     <!-- Main Screen -->
-    <string name="recent_nfc">鏈€杩戣鍙?/string>
-    <string name="no_data">鏆傛棤鏁版嵁</string>
-    <string name="quick_actions">蹇嵎鎿嶄綔</string>
-    <string name="read_nfc_tag">璇诲彇NFC鏍囩</string>
-    <string name="read_nfc_desc">灏嗘墜鏈洪潬杩慛FC鏍囩杩涜璇诲彇</string>
-    <string name="view_local_data">鏌ョ湅鏈湴鏁版嵁</string>
-    <string name="view_local_data_desc">绠＄悊鍜屾煡鐪嬪凡淇濆瓨鐨凬FC璁板綍</string>
-    <string name="app_settings">搴旂敤璁剧疆</string>
-    <string name="app_settings_desc">閰嶇疆搴旂敤鍋忓ソ鍜屽姛鑳?/string>
+    <string name="recent_nfc">最近读取</string>
+    <string name="no_data">暂无数据</string>
+    <string name="quick_actions">快捷操作</string>
+    <string name="read_nfc_tag">读取NFC标签</string>
+    <string name="read_nfc_desc">将手机靠近NFC标签进行读取</string>
+    <string name="view_local_data">查看本地数据</string>
+    <string name="view_local_data_desc">管理和查看已保存的NFC记录</string>
+    <string name="app_settings">应用设置</string>
+    <string name="app_settings_desc">配置应用偏好和功能</string>
     
     <!-- Read Screen -->
-    <string name="scanning">姝ｅ湪鎵弿...</string>
-    <string name="scan_complete">鎵弿瀹屾垚</string>
-    <string name="scan_failed">鎵弿澶辫触</string>
-    <string name="place_nfc_tag">璇峰皢NFC鏍囩闈犺繎鎵嬫満</string>
-    <string name="reading">姝ｅ湪璇诲彇...</string>
+    <string name="scanning">正在扫描...</string>
+    <string name="scan_complete">扫描完成</string>
+    <string name="scan_failed">扫描失败</string>
+    <string name="place_nfc_tag">请将NFC标签靠近手机</string>
+    <string name="reading">正在读取...</string>
     
     <!-- Actions -->
-    <string name="save">淇濆瓨</string>
-    <string name="copy">澶嶅埗</string>
-    <string name="share">鍒嗕韩</string>
-    <string name="edit">缂栬緫</string>
-    <string name="delete">鍒犻櫎</string>
-    <string name="confirm">纭畾</string>
-    <string name="cancel">鍙栨秷</string>
-    <string name="ok">纭畾</string>
-    <string name="yes">鏄?/string>
-    <string name="no">鍚?/string>
-    <string name="clear">娓呴櫎</string>
+    <string name="save">保存</string>
+    <string name="copy">复制</string>
+    <string name="share">分享</string>
+    <string name="edit">编辑</string>
+    <string name="delete">删除</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="clear">清除</string>
     
     <!-- Search & Filter -->
-    <string name="search">鎼滅储...</string>
-    <string name="filter">绛涢€?/string>
-    <string name="filter_by_type">鎸夌被鍨嬬瓫閫?/string>
-    <string name="all_types">鍏ㄩ儴绫诲瀷</string>
+    <string name="search">搜索...</string>
+    <string name="filter">筛选</string>
+    <string name="filter_by_type">按类型筛选</string>
+    <string name="all_types">全部类型</string>
     
     <!-- Data Types -->
-    <string name="type_all">鍏ㄩ儴</string>
-    <string name="type_text">鏂囨湰</string>
-    <string name="type_url">缃戝潃</string>
-    <string name="type_vcard">鍚嶇墖</string>
-    <string name="type_phone">鐢佃瘽</string>
-    <string name="type_email">閭</string>
+    <string name="type_all">全部</string>
+    <string name="type_text">文本</string>
+    <string name="type_url">网址</string>
+    <string name="type_vcard">名片</string>
+    <string name="type_phone">电话</string>
+    <string name="type_email">邮箱</string>
     <string name="type_wifi">WiFi</string>
-    <string name="type_geo">浣嶇疆</string>
-    <string name="type_app">搴旂敤</string>
-    <string name="type_other">鍏朵粬</string>
+    <string name="type_geo">位置</string>
+    <string name="type_app">应用</string>
+    <string name="type_other">其他</string>
     
     <!-- Data Info -->
-    <string name="time">鏃堕棿</string>
-    <string name="content">鍐呭</string>
-    <string name="note">澶囨敞</string>
-    <string name="add_note">娣诲姞澶囨敞...</string>
+    <string name="time">时间</string>
+    <string name="content">内容</string>
+    <string name="note">备注</string>
+    <string name="add_note">添加备注...</string>
     
     <!-- Data Management -->
-    <string name="export">瀵煎嚭</string>
-    <string name="import_data">瀵煎叆</string>
-    <string name="backup">澶囦唤</string>
-    <string name="restore">鎭㈠</string>
-    <string name="batch_delete">鎵归噺鍒犻櫎</string>
-    <string name="data_statistics">鏁版嵁缁熻</string>
-    <string name="total">鎬昏</string>
-    <string name="filtered_results">绛涢€夌粨鏋?/string>
+    <string name="export">导出</string>
+    <string name="import_data">导入</string>
+    <string name="backup">备份</string>
+    <string name="restore">恢复</string>
+    <string name="batch_delete">批量删除</string>
+    <string name="data_statistics">数据统计</string>
+    <string name="total">总计</string>
+    <string name="filtered_results">筛选结果</string>
     
     <!-- Export -->
-    <string name="select_export_format">閫夋嫨瀵煎嚭鏍煎紡锛?/string>
-    <string name="export_csv">瀵煎嚭CSV</string>
-    <string name="export_txt">瀵煎嚭TXT</string>
+    <string name="select_export_format">选择导出格式：</string>
+    <string name="export_csv">导出CSV</string>
+    <string name="export_txt">导出TXT</string>
     
     <!-- Empty States -->
-    <string name="no_data_found">鏈壘鍒癗FC璁板綍</string>
-    <string name="no_data_search">鏈壘鍒板寘鍚?%1$s"鐨勮褰?/string>
-    <string name="no_data_filter">娌℃湁%1$s绫诲瀷鐨勮褰?/string>
-    <string name="try_read_nfc">灏濊瘯璇诲彇涓€浜汵FC鏍囩寮€濮嬩娇鐢?/string>
+    <string name="no_data_found">未找到NFC记录</string>
+    <string name="no_data_search">未找到包含"%1$s"的记录</string>
+    <string name="no_data_filter">没有%1$s类型的记录</string>
+    <string name="try_read_nfc">尝试读取一些NFC标签开始使用</string>
     
     <!-- Dialogs -->
-    <string name="confirm_delete">纭鍒犻櫎锛?/string>
-    <string name="confirm_delete_msg">纭畾瑕佸垹闄よ繖鏉FC璁板綍鍚楋紵姝ゆ搷浣滄棤娉曟挙閿€銆?/string>
-    <string name="clear_all_data">娓呯┖鎵€鏈夋暟鎹?/string>
-    <string name="clear_all_data_msg">杩欏皢鍒犻櫎鎵€鏈夊凡淇濆瓨鐨凬FC璁板綍銆傛鎿嶄綔鏃犳硶鎾ら攢銆?/string>
+    <string name="confirm_delete">确认删除？</string>
+    <string name="confirm_delete_msg">确定要删除这条NFC记录吗？此操作无法撤销。</string>
+    <string name="clear_all_data">清空所有数据</string>
+    <string name="clear_all_data_msg">这将删除所有已保存的NFC记录。此操作无法撤销。</string>
     
     <!-- Settings Categories -->
-    <string name="nfc_settings">NFC璁剧疆</string>
-    <string name="notifications">閫氱煡</string>
-    <string name="data_management_title">鏁版嵁绠＄悊</string>
-    <string name="other">鍏朵粬</string>
-    <string name="danger_zone">鍗遍櫓鍖哄煙</string>
+    <string name="nfc_settings">NFC设置</string>
+    <string name="notifications">通知</string>
+    <string name="data_management_title">数据管理</string>
+    <string name="other">其他</string>
+    <string name="danger_zone">危险区域</string>
     
     <!-- Settings Items -->
-    <string name="auto_scan">鑷姩鎵弿</string>
-    <string name="auto_scan_desc">鑷姩妫€娴嬪苟璇诲彇NFC鏍囩</string>
-    <string name="vibration">闇囧姩</string>
-    <string name="vibration_desc">鎵弿鎴愬姛鏃堕渿鍔ㄦ彁绀?/string>
-    <string name="sound">澹伴煶</string>
-    <string name="sound_desc">鎵弿鎴愬姛鏃舵挱鏀炬彁绀洪煶</string>
-    <string name="backup_desc">鑷姩澶囦唤棰戠巼</string>
-    <string name="restore_desc">浠庡浠芥仮澶嶆暟鎹?/string>
-    <string name="about">鍏充簬</string>
-    <string name="about_desc">鐗堟湰淇℃伅鍜岃鏄?/string>
-    <string name="help">甯姪</string>
-    <string name="help_desc">甯歌闂鍜屾暀绋?/string>
+    <string name="auto_scan">自动扫描</string>
+    <string name="auto_scan_desc">自动检测并读取NFC标签</string>
+    <string name="vibration">震动</string>
+    <string name="vibration_desc">扫描成功时震动提示</string>
+    <string name="sound">声音</string>
+    <string name="sound_desc">扫描成功时播放提示音</string>
+    <string name="backup_desc">自动备份频率</string>
+    <string name="restore_desc">从备份恢复数据</string>
+    <string name="about">关于</string>
+    <string name="about_desc">版本信息和说明</string>
+    <string name="help">帮助</string>
+    <string name="help_desc">常见问题和教程</string>
     
     <!-- Time Format -->
-    <string name="just_now">鍒氬垰</string>
-    <string name="min_ago">%1$d鍒嗛挓鍓?/string>
-    <string name="hours_ago">%1$d灏忔椂鍓?/string>
-    <string name="days_ago">%1$d澶╁墠</string>
+    <string name="just_now">刚刚</string>
+    <string name="min_ago">%1$d分钟前</string>
+    <string name="hours_ago">%1$d小时前</string>
+    <string name="days_ago">%1$d天前</string>
     
     <!-- Toast Messages -->
-    <string name="data_saved">鏁版嵁宸蹭繚瀛?/string>
-    <string name="copied_to_clipboard">宸插鍒跺埌鍓创鏉?/string>
-    <string name="error">閿欒</string>
-    <string name="success">鎴愬姛</string>
+    <string name="data_saved">数据已保存</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    <string name="error">错误</string>
+    <string name="success">成功</string>
     
     <!-- NFC Status Details -->
-    <string name="nfc_enabled_detail">NFC宸插惎鐢紝鍙互姝ｅ父浣跨敤</string>
-    <string name="nfc_disabled_detail">NFC鏈惎鐢紝璇峰湪璁剧疆涓紑鍚?/string>
-    <string name="nfc_not_supported_detail">姝よ澶囦笉鏀寔NFC鍔熻兘</string>
+    <string name="nfc_enabled_detail">NFC已启用，可以正常使用</string>
+    <string name="nfc_disabled_detail">NFC未启用，请在设置中开启</string>
+    <string name="nfc_not_supported_detail">此设备不支持NFC功能</string>
     
     <!-- Read Screen -->
-    <string name="place_nfc_tag_detail">璇峰皢NFC鏍囩闈犺繎鎵嬫満鑳岄潰</string>
-    <string name="keep_tag_close">淇濇寔鏍囩闈犺繎鐩村埌鎵弿瀹屾垚</string>
-    <string name="start_scan">寮€濮嬫壂鎻?/string>
-    <string name="retry_scan">閲嶆柊鎵弿</string>
-    <string name="nfc_icon">NFC鍥炬爣</string>
-    <string name="ready_to_scan">鍑嗗鎵弿 - 灏嗘墜鏈洪潬杩慛FC鏍囩</string>
+    <string name="place_nfc_tag_detail">请将NFC标签靠近手机背面</string>
+    <string name="keep_tag_close">保持标签靠近直到扫描完成</string>
+    <string name="start_scan">开始扫描</string>
+    <string name="retry_scan">重新扫描</string>
+    <string name="nfc_icon">NFC图标</string>
+    <string name="ready_to_scan">准备扫描 - 将手机靠近NFC标签</string>
     
     <!-- Help Dialog -->
-    <string name="help_dialog_msg">濡傛湁闂锛岃娣诲姞瀹㈡湇寰俊鍜ㄨ</string>
+    <string name="help_dialog_msg">如有问题，请添加客服微信咨询</string>
     <string name="customer_service_wechat">qing3287</string>
     
     <!-- NFC Action Executor -->
-    <string name="unsupported_type">涓嶆敮鎸佺殑鏁版嵁绫诲瀷</string>
-    <string name="opening_url">姝ｅ湪鎵撳紑閾炬帴</string>
-    <string name="error_opening_url">鎵撳紑閾炬帴澶辫触</string>
-    <string name="dialing_phone">姝ｅ湪鎷ㄦ墦鐢佃瘽</string>
-    <string name="error_dialing_phone">鎷ㄦ墦鐢佃瘽澶辫触</string>
-    <string name="opening_email">姝ｅ湪鎵撳紑閭欢</string>
-    <string name="error_opening_email">鎵撳紑閭欢澶辫触</string>
-    <string name="opening_map">姝ｅ湪鎵撳紑鍦板浘</string>
-    <string name="error_opening_map">鎵撳紑鍦板浘澶辫触</string>
-    <string name="wifi_suggestion_added">WiFi閰嶇疆宸叉坊鍔?/string>
-    <string name="open_wifi_settings">璇锋墦寮€WiFi璁剧疆杩炴帴</string>
-    <string name="error_connecting_wifi">杩炴帴WiFi澶辫触</string>
-    <string name="error_copying">澶嶅埗澶辫触</string>
-    <string name="opening_contacts">姝ｅ湪鎵撳紑閫氳褰?/string>
-    <string name="error_importing_contact">瀵煎叆鑱旂郴浜哄け璐?/string>
-    <string name="opening_app">姝ｅ湪鎵撳紑搴旂敤</string>
-    <string name="app_not_installed">搴旂敤鏈畨瑁咃紝姝ｅ湪鎵撳紑搴旂敤鍟嗗簵</string>
-    <string name="error_opening_app">鎵撳紑搴旂敤澶辫触</string>
+    <string name="unsupported_type">不支持的数据类型</string>
+    <string name="opening_url">正在打开链接</string>
+    <string name="error_opening_url">打开链接失败</string>
+    <string name="dialing_phone">正在拨打电话</string>
+    <string name="error_dialing_phone">拨打电话失败</string>
+    <string name="opening_email">正在打开邮件</string>
+    <string name="error_opening_email">打开邮件失败</string>
+    <string name="opening_map">正在打开地图</string>
+    <string name="error_opening_map">打开地图失败</string>
+    <string name="wifi_suggestion_added">WiFi配置已添加</string>
+    <string name="open_wifi_settings">请打开WiFi设置连接</string>
+    <string name="error_connecting_wifi">连接WiFi失败</string>
+    <string name="error_copying">复制失败</string>
+    <string name="opening_contacts">正在打开通讯录</string>
+    <string name="error_importing_contact">导入联系人失败</string>
+    <string name="opening_app">正在打开应用</string>
+    <string name="app_not_installed">应用未安装，正在打开应用商店</string>
+    <string name="error_opening_app">打开应用失败</string>
     
     <!-- Action Descriptions -->
-    <string name="action_open_url">鎵撳紑閾炬帴</string>
-    <string name="action_dial_phone">鎷ㄦ墦鐢佃瘽</string>
-    <string name="action_send_email">鍙戦€侀偖浠?/string>
-    <string name="action_open_map">鎵撳紑鍦板浘</string>
-    <string name="action_connect_wifi">杩炴帴WiFi</string>
-    <string name="action_copy_text">澶嶅埗鏂囨湰</string>
-    <string name="action_import_contact">瀵煎叆鑱旂郴浜?/string>
-    <string name="action_open_app">鎵撳紑搴旂敤</string>
-    <string name="action_view">鏌ョ湅</string>
+    <string name="action_open_url">打开链接</string>
+    <string name="action_dial_phone">拨打电话</string>
+    <string name="action_send_email">发送邮件</string>
+    <string name="action_open_map">打开地图</string>
+    <string name="action_connect_wifi">连接WiFi</string>
+    <string name="action_copy_text">复制文本</string>
+    <string name="action_import_contact">导入联系人</string>
+    <string name="action_open_app">打开应用</string>
+    <string name="action_view">查看</string>
     
     <!-- Action Dialog -->
-    <string name="execute_action">鎵ц鎿嶄綔</string>
-    <string name="action_dialog_msg">鍗冲皢鎵ц浠ヤ笅鎿嶄綔锛?/string>
+    <string name="execute_action">执行操作</string>
+    <string name="action_dialog_msg">即将执行以下操作：</string>
     
     <!-- Error Messages -->
-    <string name="save_failed">淇濆瓨澶辫触: %1$s</string>
-    <string name="update_failed">鏇存柊澶辫触: %1$s</string>
-    <string name="delete_failed">鍒犻櫎澶辫触: %1$s</string>
-    <string name="batch_delete_failed">鎵归噺鍒犻櫎澶辫触: %1$s</string>
+    <string name="save_failed">保存失败: %1$s</string>
+    <string name="update_failed">更新失败: %1$s</string>
+    <string name="delete_failed">删除失败: %1$s</string>
+    <string name="batch_delete_failed">批量删除失败: %1$s</string>
     
     <!-- Custom Name -->
-    <string name="custom_name">鍚嶇О</string>
-    <string name="custom_name_hint">杈撳叆鑷畾涔夊悕绉帮紙鍙€夛級</string>
+    <string name="custom_name">名称</string>
+    <string name="custom_name_hint">输入自定义名称（可选）</string>
     
     <!-- Export -->
-    <string name="export_all">瀵煎嚭鍏ㄩ儴</string>
-    <string name="export_single">瀵煎嚭褰撳墠</string>
-    <string name="export_success">瀵煎嚭鎴愬姛: %1$s</string>
-    <string name="export_failed">瀵煎嚭澶辫触: %1$s</string>
-    <string name="export_csv_header">鍚嶇О,绫诲瀷,鍐呭,鏃堕棿,澶囨敞</string>
-    <string name="export_data_list">鏁版嵁鍒楄〃</string>
-    <string name="export_range">瀵煎嚭鑼冨洿</string>
-    <string name="select_export_range">閫夋嫨瀵煎嚭鑼冨洿锛?/string>
-    <string name="share_file">鍒嗕韩鏂囦欢</string>
-    <string name="open_file">鎵撳紑鏂囦欢</string>
-    <string name="no_data_to_export">娌℃湁鍙鍑虹殑鏁版嵁</string>
-    <string name="export_field_type">绫诲瀷</string>
+    <string name="export_all">导出全部</string>
+    <string name="export_single">导出当前</string>
+    <string name="export_success">导出成功: %1$s</string>
+    <string name="export_failed">导出失败: %1$s</string>
+    <string name="export_csv_header">名称,类型,内容,时间,备注</string>
+    <string name="export_data_list">数据列表</string>
+    <string name="export_range">导出范围</string>
+    <string name="select_export_range">选择导出范围：</string>
+    <string name="share_file">分享文件</string>
+    <string name="open_file">打开文件</string>
+    <string name="no_data_to_export">没有可导出的数据</string>
+    <string name="export_field_type">类型</string>
     
     <!-- NFC Emulation -->
-    <string name="emulation">鍗℃ā鎷?/string>
-    <string name="emulation_desc">妯℃嫙NFC鍗＄墖</string>
-    <string name="emulation_service_desc">NFC鍗℃ā鎷熸湇鍔?/string>
-    <string name="ndef_aid_group">NDEF鏍囩搴旂敤</string>
-    <string name="emulation_title">NFC鍗℃ā鎷?/string>
-    <string name="emulation_hint">閫夋嫨宸蹭繚瀛樼殑鏁版嵁杩涜妯℃嫙锛岃鎵嬫満鍙樻垚NFC鍗＄墖</string>
-    <string name="emulation_active">姝ｅ湪妯℃嫙涓?/string>
-    <string name="emulation_inactive">鏈紑鍚ā鎷?/string>
-    <string name="emulation_active_hint">灏嗘墜鏈洪潬杩戣鍗″櫒鍗冲彲璇诲彇</string>
-    <string name="emulation_inactive_hint">閫夋嫨涓嬫柟鏁版嵁寮€濮嬫ā鎷?/string>
-    <string name="emulation_stop">鍋滄</string>
-    <string name="emulation_start">妯℃嫙</string>
-    <string name="emulation_emulating">妯℃嫙涓?/string>
-    <string name="saved_data">宸蹭繚瀛樼殑鏁版嵁</string>
-    <string name="no_saved_data">鏆傛棤宸蹭繚瀛樼殑鏁版嵁</string>
-    <string name="read_nfc_first">璇峰厛鍦ㄣ€岃鍙栥€嶉〉闈㈡壂鎻廚FC鍗＄墖淇濆瓨鏁版嵁</string>
+    <string name="emulation">卡模拟</string>
+    <string name="emulation_desc">模拟NFC卡片</string>
+    <string name="emulation_service_desc">NFC卡模拟服务</string>
+    <string name="ndef_aid_group">NDEF标签应用</string>
+    <string name="emulation_title">NFC卡模拟</string>
+    <string name="emulation_hint">选择已保存的数据进行模拟，让手机变成NFC卡片</string>
+    <string name="emulation_active">正在模拟中</string>
+    <string name="emulation_inactive">未开启模拟</string>
+    <string name="emulation_active_hint">将手机靠近读卡器即可读取</string>
+    <string name="emulation_inactive_hint">选择下方数据开始模拟</string>
+    <string name="emulation_stop">停止</string>
+    <string name="emulation_start">模拟</string>
+    <string name="emulation_emulating">模拟中</string>
+    <string name="saved_data">已保存的数据</string>
+    <string name="no_saved_data">暂无已保存的数据</string>
+    <string name="read_nfc_first">请先在「读取」页面扫描NFC卡片保存数据</string>
     
     <!-- Quick Execute -->
-    <string name="quick_execute">蹇嵎鎵ц</string>
-    <string name="quick_execute_desc">鐩存帴鎵цNFC鍔ㄤ綔锛屾棤闇€鍒峰崱</string>
-    <string name="executing">姝ｅ湪鎵ц...</string>
-    <string name="execute_success">鎵ц鎴愬姛</string>
-    <string name="execute_failed">鎵ц澶辫触</string>
+    <string name="quick_execute">快捷执行</string>
+    <string name="quick_execute_desc">直接执行NFC动作，无需刷卡</string>
+    <string name="executing">正在执行...</string>
+    <string name="execute_success">执行成功</string>
+    <string name="execute_failed">执行失败</string>
 </resources>
