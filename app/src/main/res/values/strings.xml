@@ -148,4 +148,40 @@
     <!-- Help Dialog -->
     <string name="help_dialog_msg">如有问题，请添加客服微信咨询</string>
     <string name="customer_service_wechat">qing3287</string>
+    
+    <!-- NFC Action Executor -->
+    <string name="unsupported_type">不支持的数据类型</string>
+    <string name="opening_url">正在打开链接</string>
+    <string name="error_opening_url">打开链接失败</string>
+    <string name="dialing_phone">正在拨打电话</string>
+    <string name="error_dialing_phone">拨打电话失败</string>
+    <string name="opening_email">正在打开邮件</string>
+    <string name="error_opening_email">打开邮件失败</string>
+    <string name="opening_map">正在打开地图</string>
+    <string name="error_opening_map">打开地图失败</string>
+    <string name="wifi_suggestion_added">WiFi配置已添加</string>
+    <string name="open_wifi_settings">请打开WiFi设置连接</string>
+    <string name="error_connecting_wifi">连接WiFi失败</string>
+    <string name="error_copying">复制失败</string>
+    <string name="opening_contacts">正在打开通讯录</string>
+    <string name="error_importing_contact">导入联系人失败</string>
+    <string name="opening_app">正在打开应用</string>
+    <string name="app_not_installed">应用未安装，正在打开应用商店</string>
+    <string name="error_opening_app">打开应用失败</string>
+    <string name="copied_to_clipboard">已复制到剪贴板</string>
+    
+    <!-- Action Descriptions -->
+    <string name="action_open_url">打开链接</string>
+    <string name="action_dial_phone">拨打电话</string>
+    <string name="action_send_email">发送邮件</string>
+    <string name="action_open_map">打开地图</string>
+    <string name="action_connect_wifi">连接WiFi</string>
+    <string name="action_copy_text">复制文本</string>
+    <string name="action_import_contact">导入联系人</string>
+    <string name="action_open_app">打开应用</string>
+    <string name="action_view">查看</string>
+    
+    <!-- Action Dialog -->
+    <string name="execute_action">执行操作</string>
+    <string name="action_dialog_msg">即将执行以下操作：</string>
 </resources>
