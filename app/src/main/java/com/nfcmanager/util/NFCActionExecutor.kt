@@ -25,12 +25,38 @@ class NFCActionExecutor(private val context: Context) {
             NFCType.EMAIL -> sendEmail(nfcData.content)
             NFCType.GEO -> openMap(nfcData.content)
             NFCType.WIFI -> connectWifi(nfcData.content)
-            NFCType.TEXT -> copyToClipboard(nfcData.content)
+            NFCType.TEXT -> {
+                // 智能识别：如果内容看起来像电话号码，则拨打电话
+                val content = nfcData.content.trim()
+                if (content.matches(Regex("^[+]?[0-9\\s\\-()]{7,15}$"))) {
+                    dialPhone(content)
+                } else if (content.contains("@") && content.contains(".")) {
+                    sendEmail(content)
+                } else if (content.startsWith("http://") || content.startsWith("https://") || 
+                           content.matches(Regex("^[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\\.?$"))) {
+                    openUrl(content)
+                } else {
+                    copyToClipboard(content)
+                }
+            }
             NFCType.VCARD -> importContact(nfcData.content)
             NFCType.APP -> openApp(nfcData.content)
             NFCType.UNKNOWN -> {
-                Toast.makeText(context, context.getString(R.string.unsupported_type), Toast.LENGTH_SHORT).show()
-                false
+                // 对于未知类型，也尝试智能识别
+                val content = nfcData.content.trim()
+                if (content.startsWith("http://") || content.startsWith("https://")) {
+                    openUrl(content)
+                } else if (content.startsWith("tel:")) {
+                    dialPhone(content.removePrefix("tel:"))
+                } else if (content.startsWith("mailto:")) {
+                    sendEmail(content.removePrefix("mailto:"))
+                } else if (content.startsWith("geo:")) {
+                    openMap(content)
+                } else if (content.startsWith("WIFI:")) {
+                    connectWifi(content)
+                } else {
+                    copyToClipboard(content)
+                }
             }
         }
     }
@@ -112,14 +138,28 @@ class NFCActionExecutor(private val context: Context) {
             // Parse WiFi config: WIFI:S:ssid;T:WPA;P:password;;
             val ssid = extractWifiField(wifiData, "S")
             val password = extractWifiField(wifiData, "P")
+            val authType = extractWifiField(wifiData, "T")
+            
+            if (ssid.isEmpty()) {
+                Toast.makeText(context, context.getString(R.string.error_connecting_wifi), Toast.LENGTH_SHORT).show()
+                return false
+            }
             
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 val wifiManager = context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-                val suggestion = WifiNetworkSuggestion.Builder()
+                val suggestionBuilder = WifiNetworkSuggestion.Builder()
                     .setSsid(ssid)
-                    .setWpa2Passphrase(password)
-                    .build()
                 
+                // Only set password if provided
+                if (password.isNotEmpty()) {
+                    when (authType.uppercase()) {
+                        "WPA", "WPA2" -> suggestionBuilder.setWpa2Passphrase(password)
+                        "WEP" -> suggestionBuilder.setWpa2Passphrase(password) // WEP not directly supported
+                        else -> suggestionBuilder.setWpa2Passphrase(password)
+                    }
+                }
+                
+                val suggestion = suggestionBuilder.build()
                 wifiManager.addNetworkSuggestions(listOf(suggestion))
                 Toast.makeText(context, context.getString(R.string.wifi_suggestion_added), Toast.LENGTH_SHORT).show()
             } else {
