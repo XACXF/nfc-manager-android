@@ -7,6 +7,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.filled.Nfc
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
@@ -14,7 +15,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -26,6 +30,7 @@ import com.nfcmanager.nfc.NFCManager
 import com.nfcmanager.ui.component.NFCScanningAnimation
 import com.nfcmanager.ui.component.NFCStatusCard
 import com.nfcmanager.viewmodel.MainViewModel
+import android.widget.Toast
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +42,8 @@ fun ReadScreen(
     val scanResult by viewModel.scanResult.collectAsState()
     val isScanning by viewModel.isScanning.collectAsState()
     var noteText by remember { mutableStateOf("") }
+    val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
     
     // 监听扫描结果变化
     LaunchedEffect(scanResult) {
@@ -100,7 +107,7 @@ fun ReadScreen(
                     onClick = { viewModel.startScanning() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Icon(Icons.Filled.ArrowBack, contentDescription = null, modifier = Modifier.size(18.dp))
+                    Icon(Icons.Filled.Nfc, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(stringResource(R.string.ready_to_scan))
                 }
@@ -122,8 +129,18 @@ fun ReadScreen(
                                 noteText = ""
                                 viewModel.clearScanResult()
                             },
-                            onCopy = {},
-                            onShare = {},
+                            onCopy = {
+                                clipboardManager.setText(AnnotatedString(result.data.content))
+                                Toast.makeText(context, context.getString(R.string.copied_to_clipboard), Toast.LENGTH_SHORT).show()
+                            },
+                            onShare = {
+                                val shareIntent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(android.content.Intent.EXTRA_TEXT, result.data.content)
+                                    addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                }
+                                context.startActivity(android.content.Intent.createChooser(shareIntent, context.getString(R.string.share)))
+                            },
                             onDismiss = { viewModel.clearScanResult() }
                         )
                     }
