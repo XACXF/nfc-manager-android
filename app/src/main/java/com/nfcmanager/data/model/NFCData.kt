@@ -6,7 +6,7 @@ import java.util.Date
 import java.util.UUID
 
 /**
- * NFC数据实体类
+ * NFC鏁版嵁瀹炰綋绫?
  */
 @Entity(tableName = "nfc_data")
 data class NFCData(
@@ -49,18 +49,18 @@ data class NFCData(
 }
 
 /**
- * NFC数据类型枚举
+ * NFC鏁版嵁绫诲瀷鏋氫妇
  */
 enum class NFCType {
-    TEXT,       // 文本类型
-    URL,        // URL类型
-    VCARD,      // 名片类型
-    PHONE,      // 电话类型
-    EMAIL,      // 邮箱类型
-    WIFI,       // WiFi配置
-    GEO,        // 地理位置
-    APP,        // 应用启动
-    UNKNOWN,    // 未知类型
+    TEXT,       // 鏂囨湰绫诲瀷
+    URL,        // URL绫诲瀷
+    VCARD,      // 鍚嶇墖绫诲瀷
+    PHONE,      // 鐢佃瘽绫诲瀷
+    EMAIL,      // 閭绫诲瀷
+    WIFI,       // WiFi閰嶇疆
+    GEO,        // 鍦扮悊浣嶇疆
+    APP,        // 搴旂敤鍚姩
+    UNKNOWN,    // 鏈煡绫诲瀷
     
     companion object {
         fun fromMimeType(mimeType: String): NFCType {
