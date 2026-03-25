@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import com.nfcmanager.R
 import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
+import com.nfcmanager.util.VirtualNFCExecutor
+import androidx.compose.runtime.remember
 import java.text.SimpleDateFormat
 import java.util.*
 import android.widget.Toast
@@ -33,10 +35,12 @@ fun NFCDataItem(
     onItemClick: (NFCData) -> Unit,
     onEditClick: (NFCData) -> Unit,
     onDeleteClick: (NFCData) -> Unit,
-    onExportClick: (NFCData) -> Unit = {}
+    onExportClick: (NFCData) -> Unit = {},
+    onQuickExecute: (NFCData) -> Unit = {}
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
+    val virtualExecutor = remember { VirtualNFCExecutor(context) }
     
     Card(
         modifier = Modifier
@@ -76,7 +80,7 @@ fun NFCDataItem(
             
             Spacer(modifier = Modifier.height(8.dp))
             
-            // 显示自定义名称或内容
+            // 鏄剧ず鑷畾涔夊悕绉版垨鍐呭
             Text(
                 text = if (nfcData.name.isNotEmpty()) nfcData.name else nfcData.content.take(80) + if (nfcData.content.length > 80) "..." else "",
                 fontSize = 16.sp,
@@ -85,7 +89,7 @@ fun NFCDataItem(
                 maxLines = 2
             )
             
-            // 如果有自定义名称，显示内容预览
+            // 濡傛灉鏈夎嚜瀹氫箟鍚嶇О锛屾樉绀哄唴瀹归瑙?
             if (nfcData.name.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
@@ -133,6 +137,22 @@ fun NFCDataItem(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // 蹇嵎鎵ц鎸夐挳锛堣櫄鎷熷埛鍗★級
+                IconButton(
+                    onClick = {
+                        virtualExecutor.quickExecute(nfcData)
+                        Toast.makeText(context, "鎵ц: ${virtualExecutor.getActionDescription(nfcData)}", Toast.LENGTH_SHORT).show()
+                    },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.PlayArrow,
+                        contentDescription = "蹇嵎鎵ц",
+                        tint = Color(0xFF4CAF50),
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+                
                 IconButton(
                     onClick = { 
                         clipboardManager.setText(AnnotatedString(nfcData.content))
@@ -271,9 +291,9 @@ fun CompactNFCDataItem(
             ) {
                 Text(
                     text = when (nfcData.type) {
-                        NFCType.TEXT -> "文"
-                        NFCType.URL -> "网"
-                        NFCType.VCARD -> "名"
+                        NFCType.TEXT -> "鏂?
+                        NFCType.URL -> "缃?
+                        NFCType.VCARD -> "鍚?
                         else -> "N"
                     },
                     fontWeight = FontWeight.Bold,
