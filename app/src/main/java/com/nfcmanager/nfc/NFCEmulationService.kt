@@ -7,8 +7,8 @@ import android.util.Log
 import java.nio.charset.Charset
 
 /**
- * NFC鍗℃ā鎷熸湇鍔?
- * 璁╂墜鏈烘ā鎷熸垚NFC鍗＄墖锛岃鍏朵粬璇诲崱鍣ㄨ鍙?
+ * NFC卡模拟服务
+ * 让手机模拟成NFC卡片，被其他读卡器读取
  */
 class NFCEmulationService : HostApduService() {
     
@@ -18,13 +18,13 @@ class NFCEmulationService : HostApduService() {
         const val KEY_EMULATION_DATA = "emulation_data"
         const val KEY_EMULATION_TYPE = "emulation_type"
         
-        // NDEF鐩稿叧甯搁噺
+        // NDEF相关常量
         private val NDEF_CAPABILITY_CONTAINER = byteArrayOf(
             0x00, 0x0F, 0x20, 0x00, 0x3B, 0x00, 0x34, 0x04,
             0x06, 0xE1, 0x04, 0x00, 0xFF, 0x00, 0x00, 0x00
         )
         
-        // APDU鍛戒护
+        // APDU命令
         private val SELECT_APDU_HEADER = byteArrayOf(
             0x00, 0xA4.toByte(), 0x04, 0x00
         )
@@ -34,7 +34,7 @@ class NFCEmulationService : HostApduService() {
             0xD2.toByte(), 0x76, 0x00, 0x00, 0x85, 0x01, 0x01
         )
         
-        // NDEF鏂囦欢鎺у埗TLV
+        // NDEF文件控制TLV
         private val NDEF_FILE_CONTROL_TLV = byteArrayOf(
             0x04, 0x06, 0xE1, 0x04, 0x00, 0xFF.toByte(), 0x00, 0x00
         )
@@ -57,7 +57,7 @@ class NFCEmulationService : HostApduService() {
             ndefData = hexStringToByteArray(dataHex)
             Log.d(TAG, "Loaded emulation data: ${ndefData.size} bytes")
         } else {
-            // 榛樿绌篘DEF娑堟伅
+            // 默认空NDEF消息
             ndefData = createEmptyNDEFMessage()
         }
     }
@@ -70,19 +70,19 @@ class NFCEmulationService : HostApduService() {
         Log.d(TAG, "Received APDU: ${bytesToHex(commandApdu)}")
         
         return when {
-            // SELECT鍛戒护 - 閫夋嫨NDEF搴旂敤
+            // SELECT命令 - 选择NDEF应用
             isSelectCommand(commandApdu) -> {
                 Log.d(TAG, "SELECT command received")
                 byteArrayOf(0x90.toByte(), 0x00) // Success
             }
             
-            // 璇诲彇Capability Container
+            // 读取Capability Container
             isReadCapabilityContainer(commandApdu) -> {
                 Log.d(TAG, "Read CC command")
                 NDEF_CAPABILITY_CONTAINER + byteArrayOf(0x90.toByte(), 0x00)
             }
             
-            // 璇诲彇NDEF鏂囦欢
+            // 读取NDEF文件
             isReadNDEFFile(commandApdu) -> {
                 Log.d(TAG, "Read NDEF command")
                 ndefData + byteArrayOf(0x90.toByte(), 0x00)
@@ -99,14 +99,14 @@ class NFCEmulationService : HostApduService() {
         Log.d(TAG, "Deactivated: $reason")
     }
     
-    // 妫€娴婼ELECT鍛戒护
+    // 检测SELECT命令
     private fun isSelectCommand(apdu: ByteArray): Boolean {
         if (apdu.size < 12) return false
         if (!apdu.sliceArray(0..3).contentEquals(SELECT_APDU_HEADER)) return false
         return apdu.sliceArray(5..11).contentEquals(NDEF_AID)
     }
     
-    // 妫€娴嬭鍙朇apability Container
+    // 检测读取Capability Container
     private fun isReadCapabilityContainer(apdu: ByteArray): Boolean {
         return apdu.size >= 5 &&
                 apdu[0] == 0x00.toByte() &&
@@ -115,22 +115,22 @@ class NFCEmulationService : HostApduService() {
                 apdu[3] == 0x00.toByte()
     }
     
-    // 妫€娴嬭鍙朜DEF鏂囦欢
+    // 检测读取NDEF文件
     private fun isReadNDEFFile(apdu: ByteArray): Boolean {
         return apdu.size >= 5 &&
                 apdu[0] == 0x00.toByte() &&
                 apdu[1] == 0xB0.toByte()
     }
     
-    // 鍒涘缓绌篘DEF娑堟伅
+    // 创建空NDEF消息
     private fun createEmptyNDEFMessage(): ByteArray {
         return byteArrayOf(
-            0x00, 0x00, // NDEF鏂囦欢闀垮害
-            0x00, 0x00  // 绌篘DEF娑堟伅
+            0x00, 0x00, // NDEF文件长度
+            0x00, 0x00  // 空NDEF消息
         )
     }
     
-    // 鍗佸叚杩涘埗瀛楃涓茶浆瀛楄妭鏁扮粍
+    // 十六进制字符串转字节数组
     private fun hexStringToByteArray(s: String): ByteArray {
         val len = s.length
         val data = ByteArray(len / 2)
@@ -141,7 +141,7 @@ class NFCEmulationService : HostApduService() {
         return data
     }
     
-    // 瀛楄妭鏁扮粍杞崄鍏繘鍒跺瓧绗︿覆
+    // 字节数组转十六进制字符串
     private fun bytesToHex(bytes: ByteArray): String {
         val hexChars = CharArray(bytes.size * 2)
         for (i in bytes.indices) {
