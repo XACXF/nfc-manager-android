@@ -1,49 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App Info -->
     <string name="app_name">NFC管理器</string>
+    <string name="app_version">NFC管理器 v1.0.0</string>
+    <string name="copyright">© 2025 NFC管理器团队</string>
+    
+    <!-- NFC Status -->
     <string name="nfc_status">NFC状态</string>
     <string name="nfc_enabled">已启用</string>
     <string name="nfc_disabled">未启用</string>
     <string name="nfc_not_supported">不支持</string>
+    
+    <!-- Navigation -->
     <string name="read_nfc">读取标签</string>
     <string name="local_data">本地数据</string>
     <string name="settings">设置</string>
+    <string name="back">返回</string>
+    
+    <!-- Main Screen -->
     <string name="recent_nfc">最近读取</string>
     <string name="no_data">暂无数据</string>
+    <string name="quick_actions">快捷操作</string>
+    <string name="read_nfc_tag">读取NFC标签</string>
+    <string name="read_nfc_desc">将手机靠近NFC标签进行读取</string>
+    <string name="view_local_data">查看本地数据</string>
+    <string name="view_local_data_desc">管理和查看已保存的NFC记录</string>
+    <string name="app_settings">应用设置</string>
+    <string name="app_settings_desc">配置应用偏好和功能</string>
+    
+    <!-- Read Screen -->
     <string name="scanning">正在扫描...</string>
     <string name="scan_complete">扫描完成</string>
     <string name="scan_failed">扫描失败</string>
+    <string name="place_nfc_tag">请将NFC标签靠近手机</string>
+    <string name="reading">正在读取...</string>
+    
+    <!-- Actions -->
     <string name="save">保存</string>
     <string name="copy">复制</string>
     <string name="share">分享</string>
     <string name="edit">编辑</string>
     <string name="delete">删除</string>
+    <string name="confirm">确定</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="clear">清除</string>
+    
+    <!-- Search & Filter -->
     <string name="search">搜索...</string>
     <string name="filter">筛选</string>
+    <string name="filter_by_type">按类型筛选</string>
+    <string name="all_types">全部类型</string>
+    
+    <!-- Data Types -->
     <string name="type_all">全部</string>
     <string name="type_text">文本</string>
     <string name="type_url">网址</string>
     <string name="type_vcard">名片</string>
+    <string name="type_phone">电话</string>
+    <string name="type_email">邮箱</string>
+    <string name="type_wifi">WiFi</string>
+    <string name="type_geo">位置</string>
+    <string name="type_app">应用</string>
     <string name="type_other">其他</string>
+    
+    <!-- Data Info -->
     <string name="time">时间</string>
     <string name="content">内容</string>
     <string name="note">备注</string>
     <string name="add_note">添加备注...</string>
+    
+    <!-- Data Management -->
     <string name="export">导出</string>
     <string name="import_data">导入</string>
     <string name="backup">备份</string>
     <string name="restore">恢复</string>
+    <string name="batch_delete">批量删除</string>
+    <string name="data_statistics">数据统计</string>
+    <string name="total">总计</string>
+    <string name="filtered_results">筛选结果</string>
+    
+    <!-- Export -->
+    <string name="select_export_format">选择导出格式：</string>
+    <string name="export_csv">导出CSV</string>
+    <string name="export_txt">导出TXT</string>
+    
+    <!-- Empty States -->
+    <string name="no_data_found">未找到NFC记录</string>
+    <string name="no_data_search">未找到包含"%1$s"的记录</string>
+    <string name="no_data_filter">没有%1$s类型的记录</string>
+    <string name="try_read_nfc">尝试读取一些NFC标签开始使用</string>
+    
+    <!-- Dialogs -->
+    <string name="confirm_delete">确认删除？</string>
+    <string name="confirm_delete_msg">确定要删除这条NFC记录吗？此操作无法撤销。</string>
+    <string name="clear_all_data">清空所有数据</string>
+    <string name="clear_all_data_msg">这将删除所有已保存的NFC记录。此操作无法撤销。</string>
+    
+    <!-- Settings Categories -->
+    <string name="nfc_settings">NFC设置</string>
+    <string name="notifications">通知</string>
+    <string name="data_management_title">数据管理</string>
+    <string name="other">其他</string>
+    <string name="danger_zone">危险区域</string>
+    
+    <!-- Settings Items -->
     <string name="auto_scan">自动扫描</string>
-    <string name="storage_location">存储位置</string>
+    <string name="auto_scan_desc">自动检测并读取NFC标签</string>
+    <string name="vibration">震动</string>
+    <string name="vibration_desc">扫描成功时震动提示</string>
+    <string name="sound">声音</string>
+    <string name="sound_desc">扫描成功时播放提示音</string>
+    <string name="backup_desc">自动备份频率</string>
+    <string name="restore_desc">从备份恢复数据</string>
     <string name="about">关于</string>
+    <string name="about_desc">版本信息和说明</string>
     <string name="help">帮助</string>
+    <string name="help_desc">常见问题和教程</string>
+    
+    <!-- Time Format -->
+    <string name="just_now">刚刚</string>
+    <string name="min_ago">%1$d分钟前</string>
+    <string name="hours_ago">%1$d小时前</string>
+    <string name="days_ago">%1$d天前</string>
+    
+    <!-- Toast Messages -->
     <string name="data_saved">数据已保存</string>
     <string name="copied_to_clipboard">已复制到剪贴板</string>
-    <string name="confirm_delete">确认删除？</string>
-    <string name="yes">是</string>
-    <string name="no">否</string>
-    <string name="cancel">取消</string>
-    <string name="ok">确定</string>
     <string name="error">错误</string>
     <string name="success">成功</string>
 </resources>
