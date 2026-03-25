@@ -11,8 +11,8 @@ import com.nfcmanager.data.model.NFCType
 import java.nio.charset.Charset
 
 /**
- * 铏氭嫙NFC鎵ц鍣?
- * 閫氳繃鍙戦€佽櫄鎷烴FC Intent鏉ユā鎷熷埛鍗℃晥鏋?
+ * 虚拟NFC执行器
+ * 通过发送虚拟NFC Intent来模拟刷卡效果
  */
 class VirtualNFCExecutor(private val context: Context) {
     
@@ -23,29 +23,29 @@ class VirtualNFCExecutor(private val context: Context) {
     private val actionExecutor = NFCActionExecutor(context)
     
     /**
-     * 鎵ц铏氭嫙NFC鎿嶄綔
-     * 鏂瑰紡1锛氬彂閫佽櫄鎷烮ntent锛堝彲琚叾浠朅pp鎺ユ敹锛?
-     * 鏂瑰紡2锛氱洿鎺ユ墽琛屾搷浣滐紙鏇村揩鏇村彲闈狅級
+     * 执行虚拟NFC操作
+     * 方式1：发送虚拟Intent（可被其他App接收）
+     * 方式2：直接执行操作（更快更可靠）
      */
     fun executeVirtualNFC(nfcData: NFCData, useIntent: Boolean = false): Boolean {
         return if (useIntent) {
-            // 鏂瑰紡1锛氬彂閫佽櫄鎷烴FC Intent
+            // 方式1：发送虚拟NFC Intent
             sendVirtualNFCIntent(nfcData)
         } else {
-            // 鏂瑰紡2锛氱洿鎺ユ墽琛屾搷浣滐紙鎺ㄨ崘锛?
+            // 方式2：直接执行操作（推荐）
             actionExecutor.execute(nfcData)
         }
     }
     
     /**
-     * 鍙戦€佽櫄鎷烴FC Intent
-     * 杩欎細璁╃郴缁熷拰鍏朵粬App浠ヤ负鐪熺殑鏀跺埌浜哊FC鏍囩
+     * 发送虚拟NFC Intent
+     * 这会让系统和其他App以为真的收到了NFC标签
      */
     private fun sendVirtualNFCIntent(nfcData: NFCData): Boolean {
         return try {
             val ndefMessage = createNDEFMessage(nfcData)
             
-            // 鍙戦€丯DEF_DISCOVERED Intent
+            // 发送NDEF_DISCOVERED Intent
             val intent = Intent(NfcAdapter.ACTION_NDEF_DISCOVERED).apply {
                 putExtra(NfcAdapter.EXTRA_NDEF_MESSAGES, arrayOf(ndefMessage))
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -54,19 +54,19 @@ class VirtualNFCExecutor(private val context: Context) {
             context.sendBroadcast(intent)
             Log.d(TAG, "Virtual NFC Intent sent for type: ${nfcData.type}")
             
-            // 鍚屾椂涔熸墽琛屽疄闄呮搷浣?
+            // 同时也执行实际操作
             actionExecutor.execute(nfcData)
             
             true
         } catch (e: Exception) {
             Log.e(TAG, "Failed to send virtual NFC intent", e)
-            // 闄嶇骇涓虹洿鎺ユ墽琛?
+            // 降级为直接执行
             actionExecutor.execute(nfcData)
         }
     }
     
     /**
-     * 鏍规嵁NFC鏁版嵁鍒涘缓NDEF娑堟伅
+     * 根据NFC数据创建NDEF消息
      */
     private fun createNDEFMessage(nfcData: NFCData): NdefMessage {
         val record = when (nfcData.type) {
@@ -85,14 +85,14 @@ class VirtualNFCExecutor(private val context: Context) {
     }
     
     /**
-     * 鍒涘缓URI绫诲瀷鐨凬DEF璁板綍
+     * 创建URI类型的NDEF记录
      */
     private fun createUriRecord(uri: String): NdefRecord {
         return NdefRecord.createUri(uri)
     }
     
     /**
-     * 鍒涘缓鏂囨湰绫诲瀷鐨凬DEF璁板綍
+     * 创建文本类型的NDEF记录
      */
     private fun createTextRecord(text: String): NdefRecord {
         val langBytes = "en".toByteArray(Charset.forName("US-ASCII"))
@@ -107,21 +107,21 @@ class VirtualNFCExecutor(private val context: Context) {
     }
     
     /**
-     * 鍒涘缓MIME绫诲瀷鐨凬DEF璁板綍
+     * 创建MIME类型的NDEF记录
      */
     private fun createMimeRecord(mimeType: String, content: String): NdefRecord {
         return NdefRecord.createMime(mimeType, content.toByteArray(Charset.forName("UTF-8")))
     }
     
     /**
-     * 鑾峰彇鎿嶄綔鎻忚堪
+     * 获取操作描述
      */
     fun getActionDescription(nfcData: NFCData): String {
         return actionExecutor.getActionDescription(nfcData.type)
     }
     
     /**
-     * 鎵ц蹇嵎鎿嶄綔锛堜笉鍙戦€両ntent锛岀洿鎺ユ墽琛岋級
+     * 执行快捷操作（不发送Intent，直接执行）
      */
     fun quickExecute(nfcData: NFCData): Boolean {
         return actionExecutor.execute(nfcData)
