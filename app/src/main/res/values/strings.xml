@@ -189,4 +189,8 @@
     <string name="update_failed">更新失败: %1$s</string>
     <string name="delete_failed">删除失败: %1$s</string>
     <string name="batch_delete_failed">批量删除失败: %1$s</string>
+    
+    <!-- Custom Name -->
+    <string name="custom_name">名称</string>
+    <string name="custom_name_hint">输入自定义名称（可选）</string>
 </resources>
