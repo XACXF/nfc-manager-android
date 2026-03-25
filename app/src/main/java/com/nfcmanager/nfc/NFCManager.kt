@@ -78,14 +78,88 @@ class NFCManager(private val context: Context) {
             ))
         }
         
-        val record = records[0]
-        return when {
-            record.toUri() != null -> parseURIRecord(record)
-            record.tnf == NdefRecord.TNF_WELL_KNOWN && 
-                java.util.Arrays.equals(record.type, NdefRecord.RTD_TEXT) -> parseTextRecord(record)
-            record.tnf == NdefRecord.TNF_MIME_MEDIA -> parseMimeRecord(record)
-            else -> parseUnknownRecord(record)
+        // 瑙ｆ瀽鎵€鏈夎褰曪紝鎻愬彇URL鍜孉AR
+        var mainContent = ""
+        var mainType = NFCType.UNKNOWN
+        var aarPackage: String? = null
+        
+        for (record in records) {
+            when {
+                // 妫€娴婣AR锛圓ndroid Application Record锛?
+                record.tnf == NdefRecord.TNF_EXTERNAL_TYPE && 
+                    String(record.type, Charset.forName("US-ASCII")) == "android.com:pkg" -> {
+                    aarPackage = String(record.payload, Charset.forName("US-ASCII"))
+                    Log.d(TAG, "Found AAR: $aarPackage")
+                }
+                
+                // URI璁板綍
+                record.toUri() != null -> {
+                    if (mainContent.isEmpty()) {
+                        val uri = record.toUri().toString()
+                        mainContent = uri
+                        mainType = when {
+                            uri.startsWith("http://") || uri.startsWith("https://") -> NFCType.URL
+                            uri.startsWith("tel:") -> NFCType.PHONE
+                            uri.startsWith("mailto:") -> NFCType.EMAIL
+                            uri.startsWith("geo:") -> NFCType.GEO
+                            else -> NFCType.URL
+                        }
+                    }
+                }
+                
+                // 鏂囨湰璁板綍
+                record.tnf == NdefRecord.TNF_WELL_KNOWN && 
+                    java.util.Arrays.equals(record.type, NdefRecord.RTD_TEXT) -> {
+                    if (mainContent.isEmpty()) {
+                        val payload = record.payload
+                        val textEncoding = if ((payload[0].toInt() and 0x80) == 0) "UTF-8" else "UTF-16"
+                        val languageCodeLength = payload[0].toInt() and 0x3F
+                        mainContent = String(
+                            payload,
+                            languageCodeLength + 1,
+                            payload.size - languageCodeLength - 1,
+                            Charset.forName(textEncoding)
+                        )
+                        mainType = NFCType.TEXT
+                    }
+                }
+                
+                // MIME璁板綍
+                record.tnf == NdefRecord.TNF_MIME_MEDIA -> {
+                    if (mainContent.isEmpty()) {
+                        val mimeType = String(record.type, Charset.forName("US-ASCII"))
+                        when {
+                            mimeType.startsWith("text/vcard") || mimeType.startsWith("text/x-vcard") -> {
+                                mainContent = String(record.payload, Charset.forName("UTF-8"))
+                                mainType = NFCType.VCARD
+                            }
+                            mimeType.startsWith("application/vnd.wfa.wsc") -> {
+                                mainContent = String(record.payload, Charset.forName("UTF-8"))
+                                mainType = NFCType.WIFI
+                            }
+                        }
+                    }
+                }
+            }
         }
+        
+        // 濡傛灉娌℃湁瑙ｆ瀽鍒板唴瀹癸紝浣跨敤绗竴鏉¤褰?
+        if (mainContent.isEmpty()) {
+            val record = records[0]
+            try {
+                mainContent = String(record.payload, Charset.forName("UTF-8"))
+            } catch (e: Exception) {
+                mainContent = "Unknown content"
+            }
+        }
+        
+        Log.d(TAG, "NDEF parsed: type=$mainType, content=$mainContent, aar=$aarPackage")
+        
+        return NFCReadResult.Success(NFCData(
+            content = mainContent,
+            type = mainType,
+            aarPackage = aarPackage
+        ))
     }
     
     private fun parseMimeRecord(record: NdefRecord): NFCReadResult {
