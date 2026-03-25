@@ -30,6 +30,7 @@ fun SettingsScreen(
     var autoScanEnabled by remember { mutableStateOf(true) }
     var vibrationEnabled by remember { mutableStateOf(true) }
     var soundEnabled by remember { mutableStateOf(true) }
+    var showHelpDialog by remember { mutableStateOf(false) }
     
     Scaffold(
         topBar = {
@@ -130,7 +131,8 @@ fun SettingsScreen(
             SettingsItem(
                 icon = Icons.Filled.Help,
                 title = stringResource(R.string.help),
-                subtitle = stringResource(R.string.help_desc)
+                subtitle = stringResource(R.string.help_desc),
+                onClick = { showHelpDialog = true }
             )
             
             Divider()
@@ -199,6 +201,84 @@ fun SettingsScreen(
             )
         }
     }
+    
+    // 帮助弹窗
+    if (showHelpDialog) {
+        HelpDialog(
+            onDismiss = { showHelpDialog = false }
+        )
+    }
+}
+
+@Composable
+fun HelpDialog(onDismiss: () -> Unit) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { 
+            Icon(
+                imageVector = Icons.Filled.Help,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(48.dp)
+            )
+        },
+        title = {
+            Text(
+                text = stringResource(R.string.help),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        },
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = stringResource(R.string.help_dialog_msg),
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center
+                )
+                
+                Spacer(modifier = Modifier.height(16.dp))
+                
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color(0xFF4CAF50).copy(alpha = 0.1f)
+                    ),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Filled.Chat,
+                            contentDescription = null,
+                            tint = Color(0xFF4CAF50),
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = stringResource(R.string.customer_service_wechat),
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4CAF50)
+                        )
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.ok))
+            }
+        }
+    )
 }
 
 @Composable
@@ -220,7 +300,8 @@ fun SettingsItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     title: String,
     subtitle: String,
-    trailing: @Composable () -> Unit = {}
+    trailing: @Composable () -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     ListItem(
         headlineContent = {
@@ -243,6 +324,15 @@ fun SettingsItem(
                 tint = MaterialTheme.colorScheme.primary
             )
         },
-        trailingContent = trailing
+        trailingContent = trailing,
+        modifier = Modifier
+            .fillMaxWidth()
+            .then(
+                if (trailing == {}) {
+                    Modifier
+                } else {
+                    Modifier
+                }
+            )
     )
 }
