@@ -12,9 +12,10 @@ data class NFCData(
     val content: String,
     val type: NFCType,
     val readTime: Date = Date(),
-    val name: String = "",  // 自定义名称
+    val name: String = "",  // 鑷畾涔夊悕绉?
     val note: String = "",
-    val rawData: ByteArray? = null
+    val rawData: ByteArray? = null,
+    val aarPackage: String? = null  // Android Application Record鍖呭悕锛堢敤浜庤嚜鍔ㄥ惎鍔ㄥ簲鐢級
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
