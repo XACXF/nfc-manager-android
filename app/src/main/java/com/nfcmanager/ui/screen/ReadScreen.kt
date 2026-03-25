@@ -41,6 +41,7 @@ fun ReadScreen(
     val nfcStatus by viewModel.nfcStatus.collectAsState()
     val scanResult by viewModel.scanResult.collectAsState()
     val isScanning by viewModel.isScanning.collectAsState()
+    var nameText by remember { mutableStateOf("") }
     var noteText by remember { mutableStateOf("") }
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
@@ -121,11 +122,14 @@ fun ReadScreen(
                     is NFCManager.NFCReadResult.Success -> {
                         ScanResultCard(
                             nfcData = result.data,
+                            nameText = nameText,
                             noteText = noteText,
+                            onNameTextChange = { nameText = it },
                             onNoteTextChange = { noteText = it },
                             onSave = {
-                                val dataWithNote = result.data.copy(note = noteText)
-                                viewModel.saveNFCData(dataWithNote)
+                                val dataWithName = result.data.copy(name = nameText, note = noteText)
+                                viewModel.saveNFCData(dataWithName)
+                                nameText = ""
                                 noteText = ""
                                 viewModel.clearScanResult()
                             },
@@ -141,7 +145,11 @@ fun ReadScreen(
                                 }
                                 context.startActivity(android.content.Intent.createChooser(shareIntent, context.getString(R.string.share)))
                             },
-                            onDismiss = { viewModel.clearScanResult() }
+                            onDismiss = { 
+                                nameText = ""
+                                noteText = ""
+                                viewModel.clearScanResult() 
+                            }
                         )
                     }
                     is NFCManager.NFCReadResult.Error -> {
@@ -159,7 +167,9 @@ fun ReadScreen(
 @Composable
 fun ScanResultCard(
     nfcData: NFCData,
+    nameText: String,
     noteText: String,
+    onNameTextChange: (String) -> Unit,
     onNoteTextChange: (String) -> Unit,
     onSave: () -> Unit,
     onCopy: () -> Unit,
@@ -230,6 +240,26 @@ fun ScanResultCard(
             }
             
             Spacer(modifier = Modifier.height(16.dp))
+            
+            // 自定义名称输入
+            Text(
+                text = stringResource(R.string.custom_name),
+                fontSize = 14.sp,
+                color = Color.Gray,
+                fontWeight = FontWeight.Medium
+            )
+            
+            OutlinedTextField(
+                value = nameText,
+                onValueChange = onNameTextChange,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                placeholder = { Text(stringResource(R.string.custom_name_hint)) },
+                singleLine = true
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
             
             Text(
                 text = stringResource(R.string.add_note),
