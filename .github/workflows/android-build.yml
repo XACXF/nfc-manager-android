@@ -1,4 +1,4 @@
-name: Android CI Final
+name: Android CI
 
 on:
   push:
@@ -10,29 +10,37 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
     
     - name: Set up JDK 17
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
     
-    - name: Install Gradle 8.4
-      run: |
-        wget https://services.gradle.org/distributions/gradle-8.4-bin.zip
-        unzip -q gradle-8.4-bin.zip
-        sudo mv gradle-8.4 /opt/gradle
-        echo "/opt/gradle/bin" >> $GITHUB_PATH
-        gradle --version
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: 8.2
     
-    - name: Build APK
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    
+    - name: Build with Gradle
       run: gradle assembleDebug --stacktrace
     
     - name: Upload APK
       uses: actions/upload-artifact@v4
-      if: success()
       with:
         name: nfc-manager-apk
         path: app/build/outputs/apk/debug/*.apk
+        if-no-files-found: warn
+    
+    - name: Build Report
+      if: failure()
+      run: |
+        echo "Build failed. Check the logs above for details."
+        echo "Common issues:"
+        echo "1. Missing files - ensure all source files are committed"
+        echo "2. Syntax errors - check Kotlin/Gradle syntax"
+        echo "3. Dependency issues - verify all dependencies are correct"
