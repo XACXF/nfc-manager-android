@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.nfcmanager.R
 import com.nfcmanager.data.model.NFCData
+import com.nfcmanager.nfc.NFCWriter
 import com.nfcmanager.viewmodel.WriteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
