@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.nfcmanager.ui.theme.Pink
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -167,7 +168,7 @@ fun TypeChip(type: NFCType) {
                 NFCType.VCARD -> Color.Magenta.copy(alpha = 0.1f)
                 NFCType.PHONE -> Color(0xFFFF9800).copy(alpha = 0.1f)
                 NFCType.EMAIL -> Color.Cyan.copy(alpha = 0.1f)
-                NFCType.WIFI -> Color.Pink.copy(alpha = 0.1f)
+                NFCType.WIFI -> Pink.copy(alpha = 0.1f)
                 NFCType.GEO -> Color(0xFF3F51B5).copy(alpha = 0.1f)
                 NFCType.APP -> Color.Magenta.copy(alpha = 0.1f)
                 else -> Color.Gray.copy(alpha = 0.1f)
@@ -178,7 +179,7 @@ fun TypeChip(type: NFCType) {
                 NFCType.VCARD -> Color.Magenta
                 NFCType.PHONE -> Color(0xFFFF9800)
                 NFCType.EMAIL -> Color.Cyan
-                NFCType.WIFI -> Color.Pink
+                NFCType.WIFI -> Pink
                 NFCType.GEO -> Color(0xFF3F51B5)
                 NFCType.APP -> Color.Magenta
                 else -> Color.Gray
