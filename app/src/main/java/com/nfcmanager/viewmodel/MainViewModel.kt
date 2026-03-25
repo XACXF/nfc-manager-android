@@ -1,6 +1,7 @@
 package com.nfcmanager.viewmodel
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nfcmanager.MainActivity
@@ -9,6 +10,7 @@ import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import com.nfcmanager.data.repository.NFCRepository
 import com.nfcmanager.nfc.NFCManager
+import com.nfcmanager.nfc.NFCEmulationService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,10 +45,22 @@ class MainViewModel @Inject constructor(
     private val _isScanning = MutableStateFlow(false)
     val isScanning: StateFlow<Boolean> = _isScanning.asStateFlow()
     
+    // NFC妯℃嫙鐩稿叧鐘舵€?
+    private val _isEmulating = MutableStateFlow(false)
+    val isEmulating: StateFlow<Boolean> = _isEmulating.asStateFlow()
+    
+    private val _currentEmulatingId = MutableStateFlow<String?>(null)
+    val currentEmulatingId: StateFlow<String?> = _currentEmulatingId.asStateFlow()
+    
+    private val emulationPrefs: SharedPreferences by lazy {
+        context.getSharedPreferences(NFCEmulationService.PREFS_NAME, Context.MODE_PRIVATE)
+    }
+    
     init {
         loadRecentNFCData()
         observeNFCData()
         observeNFCTags()
+        loadEmulationState()
     }
     
     private fun loadRecentNFCData() {
@@ -66,7 +80,7 @@ class MainViewModel @Inject constructor(
     }
     
     /**
-     * 监听来自 MainActivity 的 NFC 标签事件
+     * 鐩戝惉鏉ヨ嚜 MainActivity 鐨?NFC 鏍囩浜嬩欢
      */
     private fun observeNFCTags() {
         viewModelScope.launch {
@@ -82,7 +96,76 @@ class MainViewModel @Inject constructor(
     }
     
     /**
-     * 开始扫描模式
+     * 鍔犺浇妯℃嫙鐘舵€?
+     */
+    private fun loadEmulationState() {
+        _isEmulating.value = emulationPrefs.getBoolean("emulation_enabled", false)
+        _currentEmulatingId.value = emulationPrefs.getString("emulating_data_id", null)
+    }
+    
+    /**
+     * 寮€濮婲FC鍗℃ā鎷?
+     */
+    fun startEmulation(nfcData: NFCData) {
+        // 灏嗘暟鎹浆鎹负NDEF鏍煎紡骞朵繚瀛?
+        val ndefData = createNDEFData(nfcData)
+        
+        emulationPrefs.edit()
+            .putBoolean("emulation_enabled", true)
+            .putString(NFCEmulationService.KEY_EMULATION_DATA, ndefData)
+            .putString("emulating_data_id", nfcData.id)
+            .apply()
+        
+        _isEmulating.value = true
+        _currentEmulatingId.value = nfcData.id
+    }
+    
+    /**
+     * 鍋滄NFC鍗℃ā鎷?
+     */
+    fun stopEmulation() {
+        emulationPrefs.edit()
+            .putBoolean("emulation_enabled", false)
+            .remove(NFCEmulationService.KEY_EMULATION_DATA)
+            .remove("emulating_data_id")
+            .apply()
+        
+        _isEmulating.value = false
+        _currentEmulatingId.value = null
+    }
+    
+    /**
+     * 鍒涘缓NDEF鏍煎紡鐨勬暟鎹?
+     */
+    private fun createNDEFData(nfcData: NFCData): String {
+        // 绠€鍖栫増锛氬皢鍐呭杞崲涓篘DEF鏍煎紡
+        // 瀹為檯搴旂敤涓渶瑕佹牴鎹暟鎹被鍨嬪垱寤烘纭殑NDEF璁板綍
+        val content = nfcData.content
+        
+        // 鍒涘缓NDEF鏂囨湰璁板綍
+        val header = byteArrayOf(0xD1.toByte()) // TNF_WELL_KNOWN + SR + IL
+        val typeLength = byteArrayOf(0x01) // "T" for text
+        val payloadLength = byteArrayOf((content.toByteArray().size + 3).toByte())
+        val type = byteArrayOf(0x54) // "T" for text
+        val status = byteArrayOf(0x02) // UTF-8, language code length
+        val language = byteArrayOf(0x65, 0x6E) // "en"
+        
+        val ndefRecord = header + typeLength + payloadLength + type + status + language + content.toByteArray()
+        
+        // NDEF鏂囦欢鏍煎紡锛氶暱搴?2瀛楄妭) + NDEF娑堟伅
+        val length = byteArrayOf(
+            ((ndefRecord.size shr 8) and 0xFF).toByte(),
+            (ndefRecord.size and 0xFF).toByte()
+        )
+        
+        val ndefFile = length + ndefRecord
+        
+        // 杞崲涓哄崄鍏繘鍒跺瓧绗︿覆
+        return ndefFile.joinToString("") { "%02X".format(it) }
+    }
+    
+    /**
+     * 寮€濮嬫壂鎻忔ā寮?
      */
     fun startScanning() {
         _isScanning.value = true
@@ -90,7 +173,7 @@ class MainViewModel @Inject constructor(
     }
     
     /**
-     * 清除扫描结果
+     * 娓呴櫎鎵弿缁撴灉
      */
     fun clearScanResult() {
         _scanResult.value = null
