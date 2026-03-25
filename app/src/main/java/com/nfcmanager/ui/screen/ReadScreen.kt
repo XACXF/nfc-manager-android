@@ -44,7 +44,7 @@ fun ReadScreen(
                 title = { Text(stringResource(R.string.read_nfc)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -70,7 +70,7 @@ fun ReadScreen(
                 text = if (isScanning) {
                     stringResource(R.string.scanning)
                 } else {
-                    "Place NFC tag near the back of your phone"
+                    stringResource(R.string.place_nfc_tag_detail)
                 },
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Medium,
@@ -80,7 +80,7 @@ fun ReadScreen(
             Spacer(modifier = Modifier.height(8.dp))
             
             Text(
-                text = "Keep the tag close until scanning is complete",
+                text = stringResource(R.string.keep_tag_close),
                 fontSize = 14.sp,
                 color = Color.Gray,
                 textAlign = TextAlign.Center
@@ -98,7 +98,7 @@ fun ReadScreen(
                 },
                 enabled = nfcStatus == NFCManager.NFCStatus.ENABLED && !isScanning
             ) {
-                Text("Start Scan")
+                Text(stringResource(R.string.start_scan))
             }
             
             scanResult?.let { result ->
@@ -306,7 +306,7 @@ fun ErrorCard(
                     containerColor = Color.Red
                 )
             ) {
-                Text("Retry Scan")
+                Text(stringResource(R.string.retry_scan))
             }
         }
     }
