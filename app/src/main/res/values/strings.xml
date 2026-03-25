@@ -232,4 +232,18 @@
     <string name="executing">正在执行...</string>
     <string name="execute_success">执行成功</string>
     <string name="execute_failed">执行失败</string>
+    
+    <!-- NFC Write -->
+    <string name="write_nfc">写入NFC</string>
+    <string name="write_nfc_title">写入到NFC标签</string>
+    <string name="write_nfc_desc">将保存的数据写入到空白NFC标签</string>
+    <string name="data_to_write">待写入数据</string>
+    <string name="no_data_to_write">未选择要写入的数据</string>
+    <string name="start_write">开始写入</string>
+    <string name="scanning_tag">正在扫描标签...</string>
+    <string name="waiting_for_tag">等待NFC标签...</string>
+    <string name="ready_to_write">准备就绪，点击下方按钮开始</string>
+    <string name="write_instructions_title">使用说明</string>
+    <string name="write_instructions">1. 点击"开始写入"按钮\n2. 将空白NFC标签靠近手机\n3. 等待写入完成\n4. 使用新标签刷卡即可\n\n注意：需要使用可擦写的NFC标签（如CUID卡）</string>
+    <string name="write_to_nfc">写入到NFC</string>
 </resources>
