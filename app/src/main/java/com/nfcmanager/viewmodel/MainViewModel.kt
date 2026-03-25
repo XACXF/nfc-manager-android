@@ -1,13 +1,16 @@
 package com.nfcmanager.viewmodel
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nfcmanager.MainActivity
+import com.nfcmanager.R
 import com.nfcmanager.data.model.NFCData
 import com.nfcmanager.data.model.NFCType
 import com.nfcmanager.data.repository.NFCRepository
 import com.nfcmanager.nfc.NFCManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val nfcRepository: NFCRepository,
-    private val nfcManager: NFCManager
+    private val nfcManager: NFCManager,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     
     private val _uiState = MutableStateFlow(MainUIState())
@@ -129,7 +133,7 @@ class MainViewModel @Inject constructor(
                 ) }
             } catch (e: Exception) {
                 _uiState.update { it.copy(
-                    errorMessage = "Save failed: ${e.message}"
+                    errorMessage = context.getString(R.string.save_failed, e.message)
                 ) }
             }
         }
@@ -141,7 +145,7 @@ class MainViewModel @Inject constructor(
                 nfcRepository.updateNFCData(nfcData)
             } catch (e: Exception) {
                 _uiState.update { it.copy(
-                    errorMessage = "Update failed: ${e.message}"
+                    errorMessage = context.getString(R.string.update_failed, e.message)
                 ) }
             }
         }
@@ -153,7 +157,7 @@ class MainViewModel @Inject constructor(
                 nfcRepository.deleteNFCData(nfcData)
             } catch (e: Exception) {
                 _uiState.update { it.copy(
-                    errorMessage = "Delete failed: ${e.message}"
+                    errorMessage = context.getString(R.string.delete_failed, e.message)
                 ) }
             }
         }
@@ -165,7 +169,7 @@ class MainViewModel @Inject constructor(
                 nfcRepository.deleteMultipleNFCData(dataList)
             } catch (e: Exception) {
                 _uiState.update { it.copy(
-                    errorMessage = "Batch delete failed: ${e.message}"
+                    errorMessage = context.getString(R.string.batch_delete_failed, e.message)
                 ) }
             }
         }
