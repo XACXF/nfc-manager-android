@@ -73,7 +73,7 @@ fun SettingsScreen(
                 }
             )
             
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            Divider()
             
             SettingsCategory(title = "Notifications")
             
@@ -101,7 +101,7 @@ fun SettingsScreen(
                 }
             )
             
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            Divider()
             
             SettingsCategory(title = "Data Management")
             
@@ -117,7 +117,7 @@ fun SettingsScreen(
                 subtitle = "Restore data from backup"
             )
             
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            Divider()
             
             SettingsCategory(title = "Other")
             
@@ -133,7 +133,7 @@ fun SettingsScreen(
                 subtitle = "FAQ and tutorials"
             )
             
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+            Divider()
             
             SettingsCategory(title = "Danger Zone", color = Color.Red)
             
