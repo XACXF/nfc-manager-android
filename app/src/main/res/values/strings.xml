@@ -168,7 +168,6 @@
     <string name="opening_app">正在打开应用</string>
     <string name="app_not_installed">应用未安装，正在打开应用商店</string>
     <string name="error_opening_app">打开应用失败</string>
-    <string name="copied_to_clipboard">已复制到剪贴板</string>
     
     <!-- Action Descriptions -->
     <string name="action_open_url">打开链接</string>
