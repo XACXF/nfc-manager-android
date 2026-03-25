@@ -36,7 +36,8 @@ fun NFCDataItem(
     onEditClick: (NFCData) -> Unit,
     onDeleteClick: (NFCData) -> Unit,
     onExportClick: (NFCData) -> Unit = {},
-    onQuickExecute: (NFCData) -> Unit = {}
+    onQuickExecute: (NFCData) -> Unit = {},
+    onWriteToNFC: (NFCData) -> Unit = {}
 ) {
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
@@ -166,6 +167,19 @@ fun NFCDataItem(
                         contentDescription = stringResource(R.string.copy),
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(18.dp)
+                    )
+                }
+                
+                // 写入到NFC标签按钮
+                IconButton(
+                    onClick = { onWriteToNFC(nfcData) },
+                    modifier = Modifier.size(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Nfc,
+                        contentDescription = stringResource(R.string.write_nfc),
+                        tint = Color(0xFFFF9800),
+                        modifier = Modifier.size(20.dp)
                     )
                 }
                 
