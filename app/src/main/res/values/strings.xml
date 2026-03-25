@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App Info -->
-    <string name="app_name">NFC管理器</string>
-    <string name="app_version">NFC管理器 v1.0.0</string>
-    <string name="copyright">© 2025 NFC管理器团队</string>
+    <string name="app_name">NFC徽章管理器</string>
+    <string name="app_version">NFC徽章管理器 v1.0.0</string>
+    <string name="copyright">© 2025 NFC徽章管理器团队</string>
     
     <!-- NFC Status -->
     <string name="nfc_status">NFC状态</string>
