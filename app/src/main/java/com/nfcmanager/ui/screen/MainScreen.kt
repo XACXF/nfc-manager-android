@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Nfc
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import com.nfcmanager.viewmodel.MainViewModel
 fun MainScreen(
     onReadNFC: () -> Unit,
     onViewData: () -> Unit,
+    onEmulation: () -> Unit,
     onSettings: () -> Unit,
     viewModel: MainViewModel = hiltViewModel()
 ) {
@@ -63,6 +65,12 @@ fun MainScreen(
                     label = { Text(stringResource(R.string.local_data)) },
                     selected = false,
                     onClick = onViewData
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.Filled.CreditCard, contentDescription = null) },
+                    label = { Text(stringResource(R.string.emulation)) },
+                    selected = false,
+                    onClick = onEmulation
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Filled.Settings, contentDescription = null) },
