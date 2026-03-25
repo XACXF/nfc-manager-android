@@ -7,9 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.filled.Nfc
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +27,6 @@ fun NFCStatusBadge(status: NFCManager.NFCStatus) {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // 状态指示器
         Box(
             modifier = Modifier
                 .size(8.dp)
@@ -42,7 +40,6 @@ fun NFCStatusBadge(status: NFCManager.NFCStatus) {
                 )
         )
         
-        // 状态文本
         Text(
             text = when (status) {
                 NFCManager.NFCStatus.ENABLED -> stringResource(R.string.nfc_enabled)
@@ -103,9 +100,9 @@ fun NFCStatusCard(status: NFCManager.NFCStatus) {
                 
                 Text(
                     text = when (status) {
-                        NFCManager.NFCStatus.ENABLED -> "NFC功能已启用，可以正常使用"
-                        NFCManager.NFCStatus.DISABLED -> "NFC功能未启用，请前往设置开启"
-                        NFCManager.NFCStatus.NOT_SUPPORTED -> "设备不支持NFC功能"
+                        NFCManager.NFCStatus.ENABLED -> "NFC is enabled and ready to use"
+                        NFCManager.NFCStatus.DISABLED -> "NFC is disabled, please enable in settings"
+                        NFCManager.NFCStatus.NOT_SUPPORTED -> "This device does not support NFC"
                     },
                     fontSize = 14.sp,
                     color = Color.Gray
@@ -125,7 +122,6 @@ fun NFCScanningAnimation(isScanning: Boolean) {
         contentAlignment = Alignment.Center
     ) {
         if (isScanning) {
-            // 扫描动画效果
             Box(
                 modifier = Modifier
                     .size(80.dp)
@@ -142,7 +138,7 @@ fun NFCScanningAnimation(isScanning: Boolean) {
         } else {
             Icon(
                 imageVector = Icons.Filled.Nfc,
-                contentDescription = "NFC图标",
+                contentDescription = "NFC Icon",
                 tint = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.size(48.dp)
             )
