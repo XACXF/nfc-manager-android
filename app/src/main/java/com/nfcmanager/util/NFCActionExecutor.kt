@@ -26,7 +26,7 @@ class NFCActionExecutor(private val context: Context) {
             NFCType.GEO -> openMap(nfcData.content)
             NFCType.WIFI -> connectWifi(nfcData.content)
             NFCType.TEXT -> {
-                // 智能识别：如果内容看起来像电话号码，则拨打电话
+                // 鏅鸿兘璇嗗埆锛氬鏋滃唴瀹圭湅璧锋潵鍍忕數璇濆彿鐮侊紝鍒欐嫧鎵撶數璇?
                 val content = nfcData.content.trim()
                 if (content.matches(Regex("^[+]?[0-9\\s\\-()]{7,15}$"))) {
                     dialPhone(content)
@@ -42,7 +42,7 @@ class NFCActionExecutor(private val context: Context) {
             NFCType.VCARD -> importContact(nfcData.content)
             NFCType.APP -> openApp(nfcData.content)
             NFCType.UNKNOWN -> {
-                // 对于未知类型，也尝试智能识别
+                // 瀵逛簬鏈煡绫诲瀷锛屼篃灏濊瘯鏅鸿兘璇嗗埆
                 val content = nfcData.content.trim()
                 if (content.startsWith("http://") || content.startsWith("https://")) {
                     openUrl(content)
@@ -68,6 +68,12 @@ class NFCActionExecutor(private val context: Context) {
             } else {
                 Uri.parse("https://$url")
             }
+            
+            // 妫€娴嬪厜閬囧窘绔犻摼鎺ワ紝鐢ㄥ厜閬嘇PP鎵撳紑
+            if (url.contains("sky.thatg.co") || url.contains("skygame.com")) {
+                return openWithSkyGame(url)
+            }
+            
             val intent = Intent(Intent.ACTION_VIEW, uri)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             context.startActivity(intent)
@@ -75,6 +81,62 @@ class NFCActionExecutor(private val context: Context) {
             true
         } catch (e: Exception) {
             Toast.makeText(context, context.getString(R.string.error_opening_url), Toast.LENGTH_SHORT).show()
+            false
+        }
+    }
+    
+    /**
+     * 鐢ㄥ厜閬嘇PP鎵撳紑閾炬帴
+     */
+    private fun openWithSkyGame(url: String): Boolean {
+        return try {
+            val uri = Uri.parse(url)
+            
+            // 灏濊瘯鐢ㄥ厜閬嘇PP鎵撳紑
+            val skyPackages = listOf(
+                "com.tgc.sky.cn",      // 鍏夐亣鍥芥湇
+                "com.tgc.sky.android", // 鍏夐亣鍥介檯鏈?
+                "com.netease.sky"      // 缃戞槗鐗堬紙濡傛灉鏈夛級
+            )
+            
+            var opened = false
+            
+            // 灏濊瘯姣忎釜鍙兘鐨勫寘鍚?
+            for (packageName in skyPackages) {
+                try {
+                    val intent = Intent(Intent.ACTION_VIEW, uri).apply {
+                        setPackage(packageName)
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    }
+                    context.startActivity(intent)
+                    Toast.makeText(context, "姝ｅ湪鐢ㄥ厜閬囨墦寮€...", Toast.LENGTH_SHORT).show()
+                    opened = true
+                    break
+                } catch (e: Exception) {
+                    // 杩欎釜鍖呭悕涓嶅瓨鍦紝缁х画灏濊瘯涓嬩竴涓?
+                    continue
+                }
+            }
+            
+            // 濡傛灉娌℃湁瀹夎鍏夐亣锛屾墦寮€搴旂敤鍟嗗簵
+            if (!opened) {
+                try {
+                    val storeIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://search?q=鍏夐亣"))
+                    storeIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(storeIntent)
+                    Toast.makeText(context, "鏈畨瑁呭厜閬囷紝姝ｅ湪鎵撳紑搴旂敤鍟嗗簵...", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    // 闄嶇骇涓烘祻瑙堝櫒鎵撳紑
+                    val intent = Intent(Intent.ACTION_VIEW, uri)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                    Toast.makeText(context, "璇峰厛瀹夎鍏夐亣娓告垙", Toast.LENGTH_SHORT).show()
+                }
+            }
+            
+            true
+        } catch (e: Exception) {
+            Toast.makeText(context, "鎵撳紑鍏夐亣澶辫触: ${e.message}", Toast.LENGTH_SHORT).show()
             false
         }
     }
