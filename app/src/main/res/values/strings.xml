@@ -193,4 +193,18 @@
     <!-- Custom Name -->
     <string name="custom_name">名称</string>
     <string name="custom_name_hint">输入自定义名称（可选）</string>
+    
+    <!-- Export -->
+    <string name="export_all">导出全部</string>
+    <string name="export_single">导出当前</string>
+    <string name="export_success">导出成功: %1$s</string>
+    <string name="export_failed">导出失败: %1$s</string>
+    <string name="export_csv_header">名称,类型,内容,时间,备注</string>
+    <string name="export_data_list">数据列表</string>
+    <string name="export_range">导出范围</string>
+    <string name="select_export_range">选择导出范围：</string>
+    <string name="share_file">分享文件</string>
+    <string name="open_file">打开文件</string>
+    <string name="no_data_to_export">没有可导出的数据</string>
+    <string name="export_field_type">类型</string>
 </resources>
