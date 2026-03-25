@@ -78,21 +78,21 @@ class NFCManager(private val context: Context) {
             ))
         }
         
-        // 瑙ｆ瀽鎵€鏈夎褰曪紝鎻愬彇URL鍜孉AR
+        // 解析所有记录，提取URL和AAR
         var mainContent = ""
         var mainType = NFCType.UNKNOWN
         var aarPackage: String? = null
         
         for (record in records) {
             when {
-                // 妫€娴婣AR锛圓ndroid Application Record锛?
+                // 检测AAR（Android Application Record）
                 record.tnf == NdefRecord.TNF_EXTERNAL_TYPE && 
                     String(record.type, Charset.forName("US-ASCII")) == "android.com:pkg" -> {
                     aarPackage = String(record.payload, Charset.forName("US-ASCII"))
                     Log.d(TAG, "Found AAR: $aarPackage")
                 }
                 
-                // URI璁板綍
+                // URI记录
                 record.toUri() != null -> {
                     if (mainContent.isEmpty()) {
                         val uri = record.toUri().toString()
@@ -107,7 +107,7 @@ class NFCManager(private val context: Context) {
                     }
                 }
                 
-                // 鏂囨湰璁板綍
+                // 文本记录
                 record.tnf == NdefRecord.TNF_WELL_KNOWN && 
                     java.util.Arrays.equals(record.type, NdefRecord.RTD_TEXT) -> {
                     if (mainContent.isEmpty()) {
@@ -124,7 +124,7 @@ class NFCManager(private val context: Context) {
                     }
                 }
                 
-                // MIME璁板綍
+                // MIME记录
                 record.tnf == NdefRecord.TNF_MIME_MEDIA -> {
                     if (mainContent.isEmpty()) {
                         val mimeType = String(record.type, Charset.forName("US-ASCII"))
@@ -143,7 +143,7 @@ class NFCManager(private val context: Context) {
             }
         }
         
-        // 濡傛灉娌℃湁瑙ｆ瀽鍒板唴瀹癸紝浣跨敤绗竴鏉¤褰?
+        // 如果没有解析到内容，使用第一条记录
         if (mainContent.isEmpty()) {
             val record = records[0]
             try {
