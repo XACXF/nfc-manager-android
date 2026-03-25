@@ -83,6 +83,23 @@ class NFCManager(private val context: Context) {
             record.toUri() != null -> parseURIRecord(record)
             record.tnf == NdefRecord.TNF_WELL_KNOWN && 
                 java.util.Arrays.equals(record.type, NdefRecord.RTD_TEXT) -> parseTextRecord(record)
+            record.tnf == NdefRecord.TNF_MIME_MEDIA -> parseMimeRecord(record)
+            else -> parseUnknownRecord(record)
+        }
+    }
+    
+    private fun parseMimeRecord(record: NdefRecord): NFCReadResult {
+        val mimeType = String(record.type, Charset.forName("US-ASCII"))
+        return when {
+            mimeType.startsWith("text/vcard") || mimeType.startsWith("text/x-vcard") -> {
+                val content = String(record.payload, Charset.forName("UTF-8"))
+                NFCReadResult.Success(NFCData(content = content, type = NFCType.VCARD))
+            }
+            mimeType.startsWith("application/vnd.wfa.wsc") -> {
+                // WiFi configuration
+                val content = String(record.payload, Charset.forName("UTF-8"))
+                NFCReadResult.Success(NFCData(content = content, type = NFCType.WIFI))
+            }
             else -> parseUnknownRecord(record)
         }
     }
