@@ -12,6 +12,7 @@ data class NFCData(
     val content: String,
     val type: NFCType,
     val readTime: Date = Date(),
+    val name: String = "",  // 自定义名称
     val note: String = "",
     val rawData: ByteArray? = null
 ) {
