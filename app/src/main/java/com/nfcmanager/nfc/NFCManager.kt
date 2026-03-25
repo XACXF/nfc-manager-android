@@ -23,15 +23,15 @@ import java.nio.charset.Charset
 import java.util.*
 
 /**
- * NFC管理器
- * 负责NFC设备的检测、标签读取和状态管理
+ * NFC绠＄悊鍣?
+ * 璐熻矗NFC璁惧鐨勬娴嬨€佹爣绛捐鍙栧拰鐘舵€佺鐞?
  */
 class NFCManager(private val context: Context) {
     
     companion object {
         private const val TAG = "NFCManager"
         
-        // NDEF记录类型
+        // NDEF璁板綍绫诲瀷
         private const val RTD_TEXT = "T"
         private const val RTD_URI = "U"
         private const val RTD_SMART_POSTER = "Sp"
@@ -46,21 +46,21 @@ class NFCManager(private val context: Context) {
     val nfcAdapter: NfcAdapter? = nfcManager.defaultAdapter
     
     /**
-     * 检查设备是否支持NFC
+     * 妫€鏌ヨ澶囨槸鍚︽敮鎸丯FC
      */
     fun isNFCSupported(): Boolean {
         return nfcAdapter != null
     }
     
     /**
-     * 检查NFC是否已启用
+     * 妫€鏌FC鏄惁宸插惎鐢?
      */
     fun isNFCEnabled(): Boolean {
         return nfcAdapter?.isEnabled == true
     }
     
     /**
-     * 获取NFC状态
+     * 鑾峰彇NFC鐘舵€?
      */
     fun getNFCStatus(): NFCStatus {
         return when {
@@ -71,7 +71,7 @@ class NFCManager(private val context: Context) {
     }
     
     /**
-     * 从Tag读取NFC数据
+     * 浠嶵ag璇诲彇NFC鏁版嵁
      */
     fun readNFCTag(tag: Tag): NFCReadResult {
         return try {
@@ -79,17 +79,17 @@ class NFCManager(private val context: Context) {
             if (ndef != null) {
                 readNDEFTag(ndef)
             } else {
-                // 尝试读取非NDEF标签
+                // 灏濊瘯璇诲彇闈濶DEF鏍囩
                 readNonNDEFTag(tag)
             }
         } catch (e: Exception) {
-            Log.e(TAG, "读取NFC标签失败", e)
-            NFCReadResult.Error("读取失败: ${e.message}")
+            Log.e(TAG, "璇诲彇NFC鏍囩澶辫触", e)
+            NFCReadResult.Error("璇诲彇澶辫触: ${e.message}")
         }
     }
     
     /**
-     * 读取NDEF格式标签
+     * 璇诲彇NDEF鏍煎紡鏍囩
      */
     private fun readNDEFTag(ndef: Ndef): NFCReadResult {
         return try {
@@ -101,22 +101,22 @@ class NFCManager(private val context: Context) {
                 parseNDEFMessage(ndefMessage)
             } else {
                 NFCReadResult.Success(NFCData(
-                    content = "空标签",
+                    content = "绌烘爣绛?,
                     type = NFCType.TEXT
                 ))
             }
         } catch (e: Exception) {
-            Log.e(TAG, "读取NDEF标签失败", e)
-            NFCReadResult.Error("读取NDEF标签失败: ${e.message}")
+            Log.e(TAG, "璇诲彇NDEF鏍囩澶辫触", e)
+            NFCReadResult.Error("璇诲彇NDEF鏍囩澶辫触: ${e.message}")
         }
     }
     
     /**
-     * 读取非NDEF格式标签
+     * 璇诲彇闈濶DEF鏍煎紡鏍囩
      */
     private fun readNonNDEFTag(tag: Tag): NFCReadResult {
         return try {
-            // 尝试识别标签类型
+            // 灏濊瘯璇嗗埆鏍囩绫诲瀷
             val techList = tag.techList
             val tagType = when {
                 techList.any { it.contains(NfcA::class.java.name) } -> "NFC-A"
@@ -126,33 +126,33 @@ class NFCManager(private val context: Context) {
                 techList.any { it.contains(MifareClassic::class.java.name) } -> "Mifare Classic"
                 techList.any { it.contains(MifareUltralight::class.java.name) } -> "Mifare Ultralight"
                 techList.any { it.contains(IsoDep::class.java.name) } -> "ISO-DEP"
-                else -> "未知类型"
+                else -> "鏈煡绫诲瀷"
             }
             
             NFCReadResult.Success(NFCData(
-                content = "非NDEF标签: $tagType",
+                content = "闈濶DEF鏍囩: $tagType",
                 type = NFCType.UNKNOWN,
                 rawData = tag.id
             ))
         } catch (e: Exception) {
-            Log.e(TAG, "读取非NDEF标签失败", e)
-            NFCReadResult.Error("读取标签失败: ${e.message}")
+            Log.e(TAG, "璇诲彇闈濶DEF鏍囩澶辫触", e)
+            NFCReadResult.Error("璇诲彇鏍囩澶辫触: ${e.message}")
         }
     }
     
     /**
-     * 解析NDEF消息
+     * 瑙ｆ瀽NDEF娑堟伅
      */
     private fun parseNDEFMessage(ndefMessage: NdefMessage): NFCReadResult {
         val records = ndefMessage.records
         if (records.isEmpty()) {
             return NFCReadResult.Success(NFCData(
-                content = "空NDEF消息",
+                content = "绌篘DEF娑堟伅",
                 type = NFCType.TEXT
             ))
         }
         
-        // 只处理第一个记录（简化处理）
+        // 鍙鐞嗙涓€涓褰曪紙绠€鍖栧鐞嗭級
         val record = records[0]
         return when {
             record.toUri() != null -> parseURIRecord(record)
@@ -164,7 +164,7 @@ class NFCManager(private val context: Context) {
     }
     
     /**
-     * 解析URI记录
+     * 瑙ｆ瀽URI璁板綍
      */
     private fun parseURIRecord(record: NdefRecord): NFCReadResult {
         val uri = record.toUri()
@@ -179,12 +179,12 @@ class NFCManager(private val context: Context) {
             }
             NFCReadResult.Success(NFCData(content = content, type = type))
         } else {
-            NFCReadResult.Error("无法解析URI记录")
+            NFCReadResult.Error("鏃犳硶瑙ｆ瀽URI璁板綍")
         }
     }
     
     /**
-     * 解析文本记录
+     * 瑙ｆ瀽鏂囨湰璁板綍
      */
     private fun parseTextRecord(record: NdefRecord): NFCReadResult {
         try {
@@ -199,13 +199,13 @@ class NFCManager(private val context: Context) {
             )
             return NFCReadResult.Success(NFCData(content = text, type = NFCType.TEXT))
         } catch (e: Exception) {
-            Log.e(TAG, "解析文本记录失败", e)
-            return NFCReadResult.Error("解析文本记录失败: ${e.message}")
+            Log.e(TAG, "瑙ｆ瀽鏂囨湰璁板綍澶辫触", e)
+            return NFCReadResult.Error("瑙ｆ瀽鏂囨湰璁板綍澶辫触: ${e.message}")
         }
     }
     
     /**
-     * 解析MIME记录
+     * 瑙ｆ瀽MIME璁板綍
      */
     private fun parseMimeRecord(record: NdefRecord): NFCReadResult {
         return try {
@@ -216,13 +216,13 @@ class NFCManager(private val context: Context) {
             val type = NFCType.fromMimeType(mimeType)
             NFCReadResult.Success(NFCData(content = content, type = type))
         } catch (e: Exception) {
-            Log.e(TAG, "解析MIME记录失败", e)
-            NFCReadResult.Error("解析MIME记录失败: ${e.message}")
+            Log.e(TAG, "瑙ｆ瀽MIME璁板綍澶辫触", e)
+            NFCReadResult.Error("瑙ｆ瀽MIME璁板綍澶辫触: ${e.message}")
         }
     }
     
     /**
-     * 解析未知记录
+     * 瑙ｆ瀽鏈煡璁板綍
      */
     private fun parseUnknownRecord(record: NdefRecord): NFCReadResult {
         return try {
@@ -231,14 +231,14 @@ class NFCManager(private val context: Context) {
             NFCReadResult.Success(NFCData(content = content, type = NFCType.UNKNOWN))
         } catch (e: Exception) {
             NFCReadResult.Success(NFCData(
-                content = "无法解析的NDEF记录",
+                content = "鏃犳硶瑙ｆ瀽鐨凬DEF璁板綍",
                 type = NFCType.UNKNOWN
             ))
         }
     }
     
     /**
-     * NFC读取结果
+     * NFC璇诲彇缁撴灉
      */
     sealed class NFCReadResult {
         data class Success(val data: NFCData) : NFCReadResult()
@@ -246,7 +246,7 @@ class NFCManager(private val context: Context) {
     }
     
     /**
-     * NFC状态枚举
+     * NFC鐘舵€佹灇涓?
      */
     enum class NFCStatus {
         ENABLED,
