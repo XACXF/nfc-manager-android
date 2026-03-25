@@ -31,7 +31,7 @@ class NFCEmulationService : HostApduService() {
         
         // AID for NDEF Tag Application
         private val NDEF_AID = byteArrayOf(
-            0xD2.toByte(), 0x76, 0x00, 0x00, 0x85, 0x01, 0x01
+            0xD2.toByte(), 0x76.toByte(), 0x00, 0x00, 0x85.toByte(), 0x01, 0x01
         )
         
         // NDEF文件控制TLV
