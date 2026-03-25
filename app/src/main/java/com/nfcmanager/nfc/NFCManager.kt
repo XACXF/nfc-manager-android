@@ -35,12 +35,13 @@ class NFCManager(private val context: Context) {
         return try {
             val ndef = Ndef.get(tag)
             if (ndef != null) {
-                readNDEFTag(ndef)
+                readNDEFTag(ndef, tag)
             } else {
                 NFCReadResult.Success(NFCData(
                     content = "Non-NDEF Tag: ${tag.techList.joinToString()}",
                     type = NFCType.UNKNOWN,
-                    rawData = tag.id
+                    rawData = tag.id,
+                    techList = tag.techList.joinToString(", ")
                 ))
             }
         } catch (e: Exception) {
@@ -49,18 +50,21 @@ class NFCManager(private val context: Context) {
         }
     }
     
-    private fun readNDEFTag(ndef: Ndef): NFCReadResult {
+    private fun readNDEFTag(ndef: Ndef, tag: Tag): NFCReadResult {
         return try {
             ndef.connect()
             val ndefMessage = ndef.ndefMessage
+            val ndefBytes = ndefMessage?.toByteArray()  // 保存完整NDEF消息
             ndef.close()
             
             if (ndefMessage != null) {
-                parseNDEFMessage(ndefMessage)
+                parseNDEFMessage(ndefMessage, tag, ndefBytes)
             } else {
                 NFCReadResult.Success(NFCData(
                     content = "Empty tag",
-                    type = NFCType.TEXT
+                    type = NFCType.TEXT,
+                    rawData = tag.id,
+                    techList = tag.techList.joinToString(", ")
                 ))
             }
         } catch (e: Exception) {
@@ -69,12 +73,15 @@ class NFCManager(private val context: Context) {
         }
     }
     
-    private fun parseNDEFMessage(ndefMessage: NdefMessage): NFCReadResult {
+    private fun parseNDEFMessage(ndefMessage: NdefMessage, tag: Tag? = null, ndefBytes: ByteArray? = null): NFCReadResult {
         val records = ndefMessage.records
         if (records.isEmpty()) {
             return NFCReadResult.Success(NFCData(
                 content = "Empty NDEF message",
-                type = NFCType.TEXT
+                type = NFCType.TEXT,
+                rawData = tag?.id,
+                techList = tag?.techList?.joinToString(", "),
+                ndefMessage = ndefBytes
             ))
         }
         
@@ -158,7 +165,10 @@ class NFCManager(private val context: Context) {
         return NFCReadResult.Success(NFCData(
             content = mainContent,
             type = mainType,
-            aarPackage = aarPackage
+            aarPackage = aarPackage,
+            rawData = tag?.id,
+            techList = tag?.techList?.joinToString(", "),
+            ndefMessage = ndefBytes
         ))
     }
     
