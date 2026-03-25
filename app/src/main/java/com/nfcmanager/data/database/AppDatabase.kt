@@ -3,6 +3,7 @@ package com.nfcmanager.data.database
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import android.content.Context
 import com.nfcmanager.data.model.NFCData
 
@@ -11,6 +12,7 @@ import com.nfcmanager.data.model.NFCData
     version = 1,
     exportSchema = false
 )
+@TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun nfcDataDao(): NFCDataDao
     
