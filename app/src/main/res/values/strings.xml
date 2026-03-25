@@ -183,4 +183,10 @@
     <!-- Action Dialog -->
     <string name="execute_action">执行操作</string>
     <string name="action_dialog_msg">即将执行以下操作：</string>
+    
+    <!-- Error Messages -->
+    <string name="save_failed">保存失败: %1$s</string>
+    <string name="update_failed">更新失败: %1$s</string>
+    <string name="delete_failed">删除失败: %1$s</string>
+    <string name="batch_delete_failed">批量删除失败: %1$s</string>
 </resources>
